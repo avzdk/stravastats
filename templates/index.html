@@ -1,0 +1,31 @@
+<html>
+    <head>
+        <title>Test</title>
+    </head>
+    <body>
+
+        <table>
+            <tr>
+              <th>Dato</th>
+              <th>Distance</th>
+              <th>Navn</th>
+            </tr>
+            {% for activity in data: %}
+            <tr>
+                <td>{{ activity.date}}</td>
+                <td>{{ activity.distance}}</td>
+                <td>{{ activity.name}}</td>
+
+            </tr>
+            {% endfor %}
+
+            
+        </table>
+
+        
+            
+        
+
+
+    </body>
+</html>
