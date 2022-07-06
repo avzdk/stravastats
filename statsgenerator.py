@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-#Last Modified: 2022/06/21 22:11:20
+#Last Modified: 2022/06/21 23:29:52
 from dataclasses import dataclass
 from strava import Strava
 from datetime import datetime
@@ -31,7 +31,7 @@ class stravaClient(Strava):
     def runningactivities(self):
         self.getToken()
         activities=[]  
-        for page in range(1,3):
+        for page in range(1,500):
             rv=self.getActivities(100,page)
             if rv != []: activities=activities+rv
             else: break     

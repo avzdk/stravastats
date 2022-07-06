@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-#Last Modified: 2022/06/21 22:10:41
+#Last Modified: 2022/06/21 23:31:24
 
 
 from flask import Flask, stream_with_context, render_template
@@ -19,7 +19,8 @@ def home():
 @app.route('/halfmarathons')
 def p_halfmarathons():
     print("HM1")
-    hm=statsgenerator.filter_distance(min=20500,max=60000)
+    fastest=statsgenerator.sort_tempo()
+    hm=statsgenerator.filter_distance(min=5000,max=6000)
     return render_template('index.html', data=hm)
     print("HM2")
 
