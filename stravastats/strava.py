@@ -2,6 +2,15 @@
 # -*- coding: utf-8 -*-
 #Last Modified: 2022/06/21 21:34:14
 
+'''
+Wrapper til Strava.
+
+Se mere på
+https://github.com/franchyze923/Code_From_Tutorials/blob/master/Strava_Api/strava_api.py
+https://towardsdatascience.com/using-the-strava-api-and-pandas-to-explore-your-activity-data-d94901d9bfde
+
+'''
+
 import requests
 import urllib3
 import logging
@@ -31,8 +40,7 @@ log.info(f"Configurationfiles: {cf}")
 CLIENT_ID=conf['STRAVA']['client_id']
 CLIENT_SECRET=conf['STRAVA']['client_secret']
 REFRESH_TOKEN=conf['STRAVA']['refresh_token']
-#https://github.com/franchyze923/Code_From_Tutorials/blob/master/Strava_Api/strava_api.py
-#https://towardsdatascience.com/using-the-strava-api-and-pandas-to-explore-your-activity-data-d94901d9bfde
+
 
 
 class Strava():
