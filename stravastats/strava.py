@@ -16,6 +16,7 @@ import urllib3
 import logging
 import configparser
 import os
+from datetime import date,datetime
 from pprint import pp
 
 ENVIRONMENT = os.environ.get("ENV", "local")
@@ -43,6 +44,7 @@ REFRESH_TOKEN=conf['STRAVA']['refresh_token']
 
 
 
+
 class Strava():
     def __init__(self):
         self.auth_url = "https://www.strava.com/oauth/token"
@@ -62,10 +64,11 @@ class Strava():
         self.access_token = res.json()['access_token']
         
 
-    def getActivities(self,pagesize=200,page=1):
+    def getActivities(self,pagesize=200,page=1, after:datetime =datetime.combine(date(1974,1,1),datetime.min.time())):
+        
         # det ladet til at 200 pr. side er maximum
         header = {'Authorization': 'Bearer ' + self.access_token}
-        param = {'per_page': pagesize, 'page': page}
+        param = {'per_page': pagesize, 'page': page, 'after':after.timestamp() }
         activities = requests.get(self.activites_url, headers=header, params=param).json()
         return activities
         

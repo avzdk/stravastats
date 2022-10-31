@@ -3,7 +3,7 @@
 #Last Modified: 2022/06/21 23:29:52
 from dataclasses import dataclass
 from strava import Strava
-from datetime import datetime
+from datetime import datetime,date
 
 @dataclass
 class Activity:
@@ -32,7 +32,7 @@ class stravaClient(Strava):
         self.getToken()
         activities=[]  
         for page in range(1,500):
-            rv=self.getActivities(100,page)
+            rv=self.getActivities(100,page,datetime.combine(date(2022,1,1),datetime.min.time()))
             if rv != []: activities=activities+rv
             else: break     
         print(f"ANTAL {len(activities)} hentet")       
