@@ -8,7 +8,7 @@ Wrapper til Strava.
 Se mere på
 https://github.com/franchyze923/Code_From_Tutorials/blob/master/Strava_Api/strava_api.py
 https://towardsdatascience.com/using-the-strava-api-and-pandas-to-explore-your-activity-data-d94901d9bfde
-
+https://developers.strava.com/docs/reference/#api-Activities-getLoggedInAthleteActivities
 '''
 
 import requests
@@ -63,6 +63,7 @@ class Strava():
         
 
     def getActivities(self,pagesize=200,page=1):
+        # det ladet til at 200 pr. side er maximum
         header = {'Authorization': 'Bearer ' + self.access_token}
         param = {'per_page': pagesize, 'page': page}
         activities = requests.get(self.activites_url, headers=header, params=param).json()
