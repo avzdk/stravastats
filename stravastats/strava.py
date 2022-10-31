@@ -7,13 +7,14 @@ import urllib3
 import logging
 import configparser
 import os
+
 ENVIRONMENT = os.environ.get("ENV", "local")
 print(f"env:{ENVIRONMENT}")
 conf = configparser.ConfigParser()
 if ENVIRONMENT == "local":
-    cf = conf.read("config_local.ini")
+    cf = conf.read(os.path.join(os.path.dirname(__file__),"config_local.ini"))
 else:
-    cf = conf.read("config.ini")
+    cf = conf.read(os.path.join(os.path.dirname(__file__),"config.ini"))
 
 log = logging.getLogger(__name__)
 logging.basicConfig(
