@@ -7,6 +7,7 @@ import urllib3
 import logging
 import configparser
 import os
+from pprint import pp
 
 ENVIRONMENT = os.environ.get("ENV", "local")
 print(f"env:{ENVIRONMENT}")
@@ -49,6 +50,7 @@ class Strava():
             'f': 'json'
         }
         res = requests.post(self.auth_url, data=payload, verify=False)
+        pp(res.json())
         self.access_token = res.json()['access_token']
         
 
@@ -64,7 +66,7 @@ if __name__ == "__main__":
     client.getToken()
     activities = client.getActivities(10)
     for a in activities:
-        print(a['name'])
+        pp(a['name'])
 
 
 
