@@ -5,15 +5,16 @@
 <table>
     <tr>
         <th>Dato</th>
+        <th>Tempo</th>
         <th>Distance</th>
         <th>Navn</th>
     </tr>
     {% for activity in data: %}
     <tr>
         <td>{{ activity.date}}</td>
-        <td>{{ activity.distance}}</td>
+        <td>{{ activity.tempo_in_txt}}</td>
+        <td>{{'%0.2f'|format( activity.distance/1000|float)}}</td>
         <td>{{ activity.name}}</td>
-
     </tr>
     {% endfor %}   
 </table>

@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-#Last Modified: 2022/06/21 23:29:52
+#Last Modified: 2022/11/01 10:41:38
 from dataclasses import dataclass
 from strava import Strava
-from datetime import datetime,date
+from datetime import datetime,date,timedelta
 
 @dataclass
 class Activity:
@@ -18,6 +18,10 @@ class Activity:
     @property
     def tempo(self):
         return 1/self.average_speed*1000/60
+    
+    @property
+    def tempo_in_txt(self):
+        return str(timedelta(minutes=self.tempo))[2:7]
 
 
     def __repr__(self):
@@ -69,7 +73,7 @@ class statsGenerator():
         
 if __name__ == '__main__':
     client=stravaClient()
-    activities=[]
+    activities:list[Activity] = []
     for activity in client.runningactivities():
         dc=Activity(activity['start_date_local'],activity['name'],activity['distance'],activity['moving_time'],activity['average_speed'],activity['sport_type'])
         activities.append(dc)
