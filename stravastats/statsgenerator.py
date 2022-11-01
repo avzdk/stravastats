@@ -72,6 +72,21 @@ class statsGenerator():
         # sorterer og overskriver activities_work
         # Eksempel på anvendelse statsgenerator.sort(lambda a: -a.distance)
         self.activities_work= list(sorted(self.activities_work, key=sortfunction))
+
+    def basicstats(self):
+        distance_max=max( statsgenerator.activities_work, key=lambda a: a.distance)
+        distance_min=min( statsgenerator.activities_work, key=lambda a: a.distance)
+        tempo_max=max( statsgenerator.activities_work, key=lambda a: a.tempo)
+        tempo_min=min( statsgenerator.activities_work, key=lambda a: a.tempo)
+
+        stats={}
+        stats['distance_max']=distance_max.distance
+        stats['distance_min']=distance_min.distance
+        stats['tempo_max']=tempo_max
+        stats['tempo_min']=tempo_min
+        return(stats)
+        
+
     
         
 if __name__ == '__main__':
@@ -88,3 +103,6 @@ if __name__ == '__main__':
     print(len(statsgenerator.activities_work))
     pp(statsgenerator.activities_work)
 
+    print(statsgenerator.basicstats())
+
+    
