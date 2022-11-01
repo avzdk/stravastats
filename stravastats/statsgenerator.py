@@ -20,11 +20,15 @@ class Activity:
     moving_time: float
     average_speed: float    
     sport_type : str
-    date : datetime = None
+    #date : datetime = None
 
     @property
     def tempo(self):        # minutter
         return 1/self.average_speed*1000/60
+
+    @property
+    def date(self):
+        return datetime.strptime(self.start_date_local[0:10], "%Y-%m-%d").date()
     
     @property
     def tempo_in_txt(self):
@@ -93,7 +97,9 @@ if __name__ == '__main__':
     client=stravaClient()
     activities:list[Activity] = []  # samtlige aktiviteter. 
     for activity in client.runningactivities(after_date=date(2022,1,1)):
+        print(activity['start_date_local'])
         dc=Activity(activity['start_date_local'],activity['name'],activity['distance'],activity['moving_time'],activity['average_speed'],activity['sport_type'])
+        print(dc.date)
         activities.append(dc)
 
     statsgenerator=statsGenerator(activities)
