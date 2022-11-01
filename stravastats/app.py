@@ -12,16 +12,15 @@ client=stravaClient()
 
 @app.route('/')
 def home():
-    hm=statsgenerator.filter_distance(min=5000,max=6000)
-    return render_template('index.html', data=hm)
+    return render_template('index.html', data=statsgenerator.activities_work)
 
 
 @app.route('/halfmarathons')
 def p_halfmarathons():
     print("HM1")
-    fastest=statsgenerator.sort_tempo()
-    hm=statsgenerator.filter_distance(min=5000,max=6000)
-    return render_template('index.html', data=hm)
+    
+    statsgenerator.filter(lambda a: a.distance > 21000)
+    return render_template('index.html', data=statsgenerator.activities_work)
     print("HM2")
 
 
@@ -33,4 +32,3 @@ if __name__ == '__main__':
         activities.append(dc)
     statsgenerator=statsGenerator(activities)
     app.run()
-
