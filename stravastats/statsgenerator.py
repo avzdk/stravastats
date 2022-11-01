@@ -78,10 +78,10 @@ class statsGenerator():
         self.activities_work= list(sorted(self.activities_work, key=sortfunction))
 
     def basicstats(self):
-        distance_max=max( statsgenerator.activities_work, key=lambda a: a.distance)
-        distance_min=min( statsgenerator.activities_work, key=lambda a: a.distance)
-        tempo_max=max( statsgenerator.activities_work, key=lambda a: a.tempo)
-        tempo_min=min( statsgenerator.activities_work, key=lambda a: a.tempo)
+        distance_max=max( self.activities_work, key=lambda a: a.distance)
+        distance_min=min( self.activities_work, key=lambda a: a.distance)
+        tempo_max=max( self.activities_work, key=lambda a: a.tempo)
+        tempo_min=min( self.activities_work, key=lambda a: a.tempo)
 
         stats={}
         stats['distance_max']=distance_max.distance
