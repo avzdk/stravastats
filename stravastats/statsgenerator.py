@@ -1,28 +1,28 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-#Last Modified: 2022/11/01 10:41:38
+#Last Modified: 2022/11/01 11:26:29
 from dataclasses import dataclass
 from strava import Strava
 from datetime import datetime,date,timedelta
+from pprint import pp
 
 @dataclass
 class Activity:
     start_date_local : str
     name : str
-    distance : float
+    distance : float        # meter
     moving_time: float
-    average_speed: float
+    average_speed: float    
     sport_type : str
     date : datetime = None
 
     @property
-    def tempo(self):
+    def tempo(self):        # minutter
         return 1/self.average_speed*1000/60
     
     @property
     def tempo_in_txt(self):
         return str(timedelta(minutes=self.tempo))[2:7]
-
 
     def __repr__(self):
         return f"Activity({self.date}  {self.distance/1000:.2f} km   {self.name}  {self.moving_time/60:.2f} min. Tempo:{self.tempo:.2f})\n"
@@ -33,6 +33,8 @@ class Activity:
 class stravaClient(Strava):
 
     def runningactivities(self):
+        # henter alle aktiviteter ved at kalde API flere gange indtil der ikke er flere.
+        # filtrerer desuden så det kun er løb.
         self.getToken()
         activities=[]  
         for page in range(1,500):
@@ -43,7 +45,7 @@ class stravaClient(Strava):
         for a in activities:
             if a['sport_type']!='Run':
                 activities.remove(a)
-        print(f"ANTAL {len(activities)} efter filtrering")     
+        print(f"ANTAL {len(activities)} efter filtrering på løb")     
         return activities
 
 class statsGenerator():
@@ -73,14 +75,24 @@ class statsGenerator():
         
 if __name__ == '__main__':
     client=stravaClient()
-    activities:list[Activity] = []
+    activities_main:list[Activity] = []  # samtlige aktiviteter. 
+    activities_work:list[Activity] = []  # filtrerede aktiviteter til analyse. Overskrives løbende.
     for activity in client.runningactivities():
         dc=Activity(activity['start_date_local'],activity['name'],activity['distance'],activity['moving_time'],activity['average_speed'],activity['sport_type'])
-        activities.append(dc)
-    statsgenerator=statsGenerator(activities)
-    hm=statsgenerator.filter_distance(min=5000,max=6000)
-    print(hm)
+        activities_main.append(dc)
+
+    activities_work= [a for a in activities_main if (a.distance>6000)]
+
+    #activities_work= list(filter(lambda a: a.distance > 6000, activities))
+    pp(activities_main)
+    pp(len(activities_main))
+    pp(len(activities_work))
+
+
+    #statsgenerator=statsGenerator(activities)
+    #hm=statsgenerator.filter_distance(min=5000,max=6000)
+    #print(hm)
 #    longest=statsgenerator.sort_distance()
 #    print(longest[0])
-    fastest=statsgenerator.sort_tempo()
-    print(fastest[:3])
+    #fastest=statsgenerator.sort_tempo()
+    #print(fastest[:3])
