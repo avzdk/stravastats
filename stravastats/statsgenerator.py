@@ -52,55 +52,39 @@ class stravaClient(Strava):
         log.info(f"heraf {len(activities)} løb")       
         activities= list(filter(lambda a: a['distance']>1, activities))
         log.info(f"efter fjernelse af dist=0 : {len(activities)} ")       
-
-        print(f"ANTAL {len(activities)} efter filtrering på løb")     
         return activities
 
 class statsGenerator():
-    def __init__(self,rawdata): 
-        self.rawdata = rawdata
-        for activity in self.rawdata: #
-            activity.date=datetime.strptime(activity.start_date_local[0:10], "%Y-%m-%d").date()
-        self.activities = rawdata       # de data der arbejdet på efter filtrering
-        # start_date,start_date_local,distance,moving_time,average_speed,max_speed,average_cadance,
-        self._group_by_date()
-        
-    def _group_by_date(self):
-        pass
+    def __init__(self,activities_main): 
+        self.activities_main = activities_main
+        self.reset()
+
+    def reset(self):
+        # vender tilbage til den samlede liste af løb.
+        self.activities_work = self.activities_main.copy()
     
-    def sort_distance(self):
-        newlist = sorted(self.activities, key=lambda d: -d.distance) 
-        return newlist
+    def filter(self,filterfunction):
+        # filtrerer og overskriver activities_work
+        # Eksempel på anvendelse statsgenerator.filter(lambda a: a.distance > 15000)
+        self.activities_work= list(filter(filterfunction, self.activities_work))
 
-    def filter_distance(self,min=0,max=100000): # i meter
-        self.activities=[activity for activity in self.activities if activity.distance >= min and activity.distance <= max]
-        return self.activities
-
-    def sort_tempo(self):
-        newlist = sorted(self.activities, key=lambda d: d.tempo) 
-        return newlist
-
+    def sort(self,sortfunction):
+        # sorterer og overskriver activities_work
+        # Eksempel på anvendelse statsgenerator.sort(lambda a: -a.distance)
+        self.activities_work= list(sorted(self.activities_work, key=sortfunction))
+    
         
 if __name__ == '__main__':
     client=stravaClient()
-    activities_main:list[Activity] = []  # samtlige aktiviteter. 
-    activities_work:list[Activity] = []  # filtrerede aktiviteter til analyse. Overskrives løbende.
+    activities:list[Activity] = []  # samtlige aktiviteter. 
     for activity in client.runningactivities(after_date=date(2022,1,1)):
         dc=Activity(activity['start_date_local'],activity['name'],activity['distance'],activity['moving_time'],activity['average_speed'],activity['sport_type'])
-        activities_main.append(dc)
+        activities.append(dc)
 
-    activities_work= [a for a in activities_main if (a.distance>6000)]
+    statsgenerator=statsGenerator(activities)
+    print(len(statsgenerator.activities_work))
+    statsgenerator.filter(lambda a: a.distance > 15000)
+    statsgenerator.sort(lambda a: -a.distance)
+    print(len(statsgenerator.activities_work))
+    pp(statsgenerator.activities_work)
 
-    #activities_work= list(filter(lambda a: a.distance > 6000, activities))
-    pp(activities_main)
-    pp(len(activities_main))
-    pp(len(activities_work))
-
-
-    #statsgenerator=statsGenerator(activities)
-    #hm=statsgenerator.filter_distance(min=5000,max=6000)
-    #print(hm)
-#    longest=statsgenerator.sort_distance()
-#    print(longest[0])
-    #fastest=statsgenerator.sort_tempo()
-    #print(fastest[:3])
