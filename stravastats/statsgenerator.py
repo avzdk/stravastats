@@ -1,10 +1,16 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-#Last Modified: 2022/11/01 11:26:29
+#Last Modified: 2022/11/01 13:11:31
 from dataclasses import dataclass
 from strava import Strava
 from datetime import datetime,date,timedelta
 from pprint import pp
+import logging
+
+log = logging.getLogger(__name__)
+
+log.info("Start")
+
 
 @dataclass
 class Activity:
@@ -32,19 +38,21 @@ class Activity:
 
 class stravaClient(Strava):
 
-    def runningactivities(self):
+    def runningactivities(self,after_date:date=date(1974,1,1)):
         # henter alle aktiviteter ved at kalde API flere gange indtil der ikke er flere.
         # filtrerer desuden så det kun er løb.
         self.getToken()
         activities=[]  
         for page in range(1,500):
-            rv=self.getActivities(100,page,datetime.combine(date(2022,1,1),datetime.min.time()))
+            rv=self.getActivities(200,page,datetime.combine(after_date,datetime.min.time()))
             if rv != []: activities=activities+rv
             else: break     
-        print(f"ANTAL {len(activities)} hentet")       
-        for a in activities:
-            if a['sport_type']!='Run':
-                activities.remove(a)
+        log.info(f"ANTAL {len(activities)} hentet")       
+        activities= list(filter(lambda a: a['sport_type']=='Run', activities))
+        log.info(f"heraf {len(activities)} løb")       
+        activities= list(filter(lambda a: a['distance']>1, activities))
+        log.info(f"efter fjernelse af dist=0 : {len(activities)} ")       
+
         print(f"ANTAL {len(activities)} efter filtrering på løb")     
         return activities
 
@@ -77,7 +85,7 @@ if __name__ == '__main__':
     client=stravaClient()
     activities_main:list[Activity] = []  # samtlige aktiviteter. 
     activities_work:list[Activity] = []  # filtrerede aktiviteter til analyse. Overskrives løbende.
-    for activity in client.runningactivities():
+    for activity in client.runningactivities(after_date=date(2022,1,1)):
         dc=Activity(activity['start_date_local'],activity['name'],activity['distance'],activity['moving_time'],activity['average_speed'],activity['sport_type'])
         activities_main.append(dc)
 
