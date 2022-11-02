@@ -1,11 +1,23 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-#Last Modified: 2022/11/01 13:11:31
+#Last Modified: 2022/11/02 12:05:38
 from dataclasses import dataclass
 from strava import Strava
 from datetime import datetime,date,timedelta
 from pprint import pp
 import logging
+import configparser
+import os
+
+ENVIRONMENT = os.environ.get("ENV", "local")
+print(f"env:{ENVIRONMENT}")
+conf = configparser.ConfigParser()
+if ENVIRONMENT == "local":
+    cf = conf.read(os.path.join(os.path.dirname(__file__),"config_local.ini"))
+else:
+    cf = conf.read(os.path.join(os.path.dirname(__file__),"config.ini"))
+
+log = logging.getLogger(__name__)
 
 log = logging.getLogger(__name__)
 
@@ -45,7 +57,7 @@ class stravaClient(Strava):
     def runningactivities(self,after_date:date=date(1974,1,1)):
         # henter alle aktiviteter ved at kalde API flere gange indtil der ikke er flere.
         # filtrerer desuden så det kun er løb.
-        self.getToken()
+        #self.getToken()
         activities=[]  
         for page in range(1,500):
             rv=self.getActivities(200,page,datetime.combine(after_date,datetime.min.time()))
@@ -95,6 +107,9 @@ class statsGenerator():
         
 if __name__ == '__main__':
     client=stravaClient()
+    client.refresh_token = conf['STRAVA']['refresh_token']        # til test
+    client.getToken()          
+    # FEJLER DA TOKEN I INI IKKE ANVENDES OG BYTTES
     activities:list[Activity] = []  # samtlige aktiviteter. 
     for activity in client.runningactivities(after_date=date(2022,1,1)):
         print(activity['start_date_local'])

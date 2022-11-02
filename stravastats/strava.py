@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-#Last Modified: 2022/11/02 08:41:51
+#Last Modified: 2022/11/02 12:09:35
 
 '''
 Wrapper til Strava.
@@ -40,9 +40,6 @@ log.info(f"Configurationfiles: {cf}")
 
 CLIENT_ID=conf['STRAVA']['client_id']
 CLIENT_SECRET=conf['STRAVA']['client_secret']
-REFRESH_TOKEN=conf['STRAVA']['refresh_token']
-
-
 
 
 class Strava():
@@ -52,21 +49,45 @@ class Strava():
         urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
     
     def getToken(self):
+        print("GETTOKEN   - start")
         payload = {
             'client_id': CLIENT_ID,
             'client_secret': CLIENT_SECRET,
-            'refresh_token': REFRESH_TOKEN,
+            'refresh_token': self.refresh_token,
             'grant_type': "refresh_token",
             'f': 'json'
         }
+        pp(payload)
         res = requests.post(self.auth_url, data=payload, verify=False)
+        
         pp(res.json())
         self.access_token = res.json()['access_token']
-        
+        print("GETTOKEN   - slut")
+
+    def exchange(self,authorization_code):
+        print("EXCHANGE --- start")
+        print(f"Bytter autorization_code  {authorization_code}")
+        #exchange the authorization code and scope for a refresh token, access token, and access token expiration date
+        payload = {
+            'client_id': CLIENT_ID,
+            'client_secret': CLIENT_SECRET,
+            'code': authorization_code,
+            'grant_type': "authorization_code",
+            'f': 'json'
+        }
+        pp(payload)
+        res = requests.post(self.auth_url, data=payload, verify=False)
+        pp(res.json())    
+        self.access_token = res.json()['access_token']
+        print(f"Byttet til access_token  {self.access_token}")
+        self.refresh_token = res.json()['refresh_token']
+        print("EXCHANGE --- slut")
+        return res   
 
     def getActivities(self,pagesize=200,page=1, after:datetime =datetime.combine(date(1974,1,1),datetime.min.time())):
-        
+        print("GETACTIVITIES --- start")
         # det ladet til at 200 pr. side er maximum
+        print(f"Henter aktiviteter med access_token  {self.access_token}")
         header = {'Authorization': 'Bearer ' + self.access_token}
         param = {'per_page': pagesize, 'page': page, 'after':after.timestamp() }
         activities = requests.get(self.baseurl+"athlete/activities", headers=header, params=param).json()
@@ -80,7 +101,8 @@ class Strava():
 
 if __name__ == "__main__":
     client=Strava()
-    client.getToken()
+    client.refresh_token = conf['STRAVA']['refresh_token']        # til test
+    client.getToken()          
     athlete=client.getAthlete()
     pp(athlete)
     activities = client.getActivities(5)
