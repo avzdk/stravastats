@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-#Last Modified: 2022/06/21 21:34:14
+#Last Modified: 2022/11/02 08:41:51
 
 '''
 Wrapper til Strava.
@@ -48,7 +48,7 @@ REFRESH_TOKEN=conf['STRAVA']['refresh_token']
 class Strava():
     def __init__(self):
         self.auth_url = "https://www.strava.com/oauth/token"
-        self.activites_url = "https://www.strava.com/api/v3/athlete/activities"
+        self.baseurl = "https://www.strava.com/api/v3/"
         urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
     
     def getToken(self):
@@ -69,14 +69,21 @@ class Strava():
         # det ladet til at 200 pr. side er maximum
         header = {'Authorization': 'Bearer ' + self.access_token}
         param = {'per_page': pagesize, 'page': page, 'after':after.timestamp() }
-        activities = requests.get(self.activites_url, headers=header, params=param).json()
+        activities = requests.get(self.baseurl+"athlete/activities", headers=header, params=param).json()
         return activities
+
+    def getAthlete(self):
+        header = {'Authorization': 'Bearer ' + self.access_token}
+        athelete = requests.get(self.baseurl+"athlete", headers=header).json()
+        return athelete
         
 
 if __name__ == "__main__":
     client=Strava()
     client.getToken()
-    activities = client.getActivities(10)
+    athlete=client.getAthlete()
+    pp(athlete)
+    activities = client.getActivities(5)
     for a in activities:
         pp(a['name'])
 
