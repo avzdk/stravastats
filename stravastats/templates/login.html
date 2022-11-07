@@ -1,15 +1,14 @@
 {% extends "base.html" %}
 
 
-{% block content %}
-<h2>Login</h2>
-client_id=77219
-client_secret=13a2c3f70999438bf2752965fc6a79f274ba3bd2
-refresh_token=a1edf741bb0eca227dac0d7300ddc8c076ad007b
+{% block scriptblock %}
 
-<p><a href="http://www.strava.com/oauth/authorize?client_id=77219&response_type=code&redirect_uri=http://localhost:5000/exchange_token&approval_prompt=force&scope=activity:read_all">Login</a></p>
-{% endblock %}
+<script>
+    window.onload = function () {
+        console.log("onload")
 
-{% block sub2 %}
-<p>Noget tekst i en ny block</p>
+        window.location.href = "http://www.strava.com/oauth/authorize?client_id=77219&response_type=code&redirect_uri=http://localhost:5000/exchange_token&approval_prompt=force&scope=activity:read_all";
+    }
+</script>
+
 {% endblock %}
