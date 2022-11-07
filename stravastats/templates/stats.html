@@ -30,7 +30,7 @@
         <td>{{ activity.date}}</td>
         <td>{{ activity.tempo_in_txt}}</td>
         <td>{{'%0.2f'|format( activity.distance/1000|float)}}</td>
-        <td>{{ activity.name}}</td>
+        <td><a href=' {{activity.stravaurl}} '>{{ activity.name}}</a></td>
     </tr>
     {% endfor %}
 </table>

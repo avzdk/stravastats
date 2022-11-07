@@ -47,6 +47,10 @@ class Activity:
     def tempo_in_txt(self):
         return str(timedelta(minutes=self.tempo))[2:7]
 
+    @property
+    def stravaurl(self):
+        return "https://www.strava.com/activities/" + self.stravaid
+
     def __repr__(self):
         return f"Activity({self.date}  {self.distance/1000:.2f} km   {self.name}  {self.moving_time/60:.2f} min. Tempo:{self.tempo:.2f})\n"
 
@@ -76,7 +80,7 @@ class stravaClient(Strava):
         activities: list[Activity] = []  # samtlige aktiviteter.
         for activity in activities_raw:
             dc = Activity(
-                activity["stravaid"],
+                str(activity["id"]),
                 activity["start_date_local"],
                 activity["name"],
                 activity["distance"],
