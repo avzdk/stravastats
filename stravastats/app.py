@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-#Last Modified: 2022/11/02 12:08:36
+#Last Modified: 2022/11/07 14:16:37
 
 
 from flask import Flask, request, stream_with_context, render_template
-from statsgenerator import stravaClient, statsGenerator, Activity
+from statsgenerator import stravaClient, StatsGenerator, Activity
 from datetime import date
 
 app = Flask(__name__)
@@ -32,7 +32,7 @@ def exchange_token():
     for activity in client.runningactivities(after_date=date(2022,1,1)):
         dc=Activity(activity['start_date_local'],activity['name'],activity['distance'],activity['moving_time'],activity['average_speed'],activity['sport_type'])
         activities.append(dc)
-    sg=statsGenerator(activities)
+    sg=StatsGenerator(activities)
     
 
     return (f"OK! code:{authorization_code} scope:{scope}")

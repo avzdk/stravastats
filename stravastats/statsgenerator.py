@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-#Last Modified: 2022/11/02 12:05:38
+#Last Modified: 2022/11/07 14:16:37
 from dataclasses import dataclass
 from strava import Strava
 from datetime import datetime,date,timedelta
@@ -70,7 +70,7 @@ class stravaClient(Strava):
         log.info(f"efter fjernelse af dist=0 : {len(activities)} ")       
         return activities
 
-class statsGenerator():
+class StatsGenerator():
     def __init__(self,activities_main): 
         self.activities_main = activities_main
         self.reset()
@@ -117,7 +117,7 @@ if __name__ == '__main__':
         print(dc.date)
         activities.append(dc)
 
-    statsgenerator=statsGenerator(activities)
+    statsgenerator=StatsGenerator(activities)
     print(len(statsgenerator.activities_work))
     statsgenerator.filter(lambda a: a.distance > 15000)
     statsgenerator.sort(lambda a: -a.distance)
