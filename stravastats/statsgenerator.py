@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-#Last Modified: 2022/11/07 14:16:37
+# Last Modified: 2022/11/07 14:16:37
 from dataclasses import dataclass
 from strava import Strava
-from datetime import datetime,date,timedelta
+from datetime import datetime, date, timedelta
 from pprint import pp
 import logging
 import configparser
@@ -13,9 +13,9 @@ ENVIRONMENT = os.environ.get("ENV", "local")
 print(f"env:{ENVIRONMENT}")
 conf = configparser.ConfigParser()
 if ENVIRONMENT == "local":
-    cf = conf.read(os.path.join(os.path.dirname(__file__),"config_local.ini"))
+    cf = conf.read(os.path.join(os.path.dirname(__file__), "config_local.ini"))
 else:
-    cf = conf.read(os.path.join(os.path.dirname(__file__),"config.ini"))
+    cf = conf.read(os.path.join(os.path.dirname(__file__), "config.ini"))
 
 log = logging.getLogger(__name__)
 
@@ -26,22 +26,22 @@ log.info("Start")
 
 @dataclass
 class Activity:
-    start_date_local : str
-    name : str
-    distance : float        # meter
+    start_date_local: str
+    name: str
+    distance: float  # meter
     moving_time: float
-    average_speed: float    
-    sport_type : str
-    #date : datetime = None
+    average_speed: float
+    sport_type: str
+    # date : datetime = None
 
     @property
-    def tempo(self):        # minutter
-        return 1/self.average_speed*1000/60
+    def tempo(self):  # minutter
+        return 1 / self.average_speed * 1000 / 60
 
     @property
     def date(self):
         return datetime.strptime(self.start_date_local[0:10], "%Y-%m-%d").date()
-    
+
     @property
     def tempo_in_txt(self):
         return str(timedelta(minutes=self.tempo))[2:7]
@@ -49,75 +49,82 @@ class Activity:
     def __repr__(self):
         return f"Activity({self.date}  {self.distance/1000:.2f} km   {self.name}  {self.moving_time/60:.2f} min. Tempo:{self.tempo:.2f})\n"
 
-    
-
 
 class stravaClient(Strava):
-
-    def runningactivities(self,after_date:date=date(1974,1,1)):
+    def runningactivities(self, after_date: date = date(1974, 1, 1)):
         # henter alle aktiviteter ved at kalde API flere gange indtil der ikke er flere.
         # filtrerer desuden så det kun er løb.
-        #self.getToken()
-        activities=[]  
-        for page in range(1,500):
-            rv=self.getActivities(200,page,datetime.combine(after_date,datetime.min.time()))
-            if rv != []: activities=activities+rv
-            else: break     
-        log.info(f"ANTAL {len(activities)} hentet")       
-        activities= list(filter(lambda a: a['sport_type']=='Run', activities))
-        log.info(f"heraf {len(activities)} løb")       
-        activities= list(filter(lambda a: a['distance']>1, activities))
-        log.info(f"efter fjernelse af dist=0 : {len(activities)} ")       
+        # self.getToken()
+        activities = []
+        for page in range(1, 500):
+            rv = self.getActivities(
+                200, page, datetime.combine(after_date, datetime.min.time())
+            )
+            if rv != []:
+                activities = activities + rv
+            else:
+                break
+        log.info(f"ANTAL {len(activities)} hentet")
+        activities = list(filter(lambda a: a["sport_type"] == "Run", activities))
+        log.info(f"heraf {len(activities)} løb")
+        activities = list(filter(lambda a: a["distance"] > 1, activities))
+        log.info(f"efter fjernelse af dist=0 : {len(activities)} ")
         return activities
 
-class StatsGenerator():
-    def __init__(self,activities_main): 
+
+class StatsGenerator:
+    def __init__(self, activities_main):
         self.activities_main = activities_main
         self.reset()
 
     def reset(self):
         # vender tilbage til den samlede liste af løb.
         self.activities_work = self.activities_main.copy()
-    
-    def filter(self,filterfunction):
+
+    def filter(self, filterfunction):
         # filtrerer og overskriver activities_work
         # Eksempel på anvendelse statsgenerator.filter(lambda a: a.distance > 15000)
-        self.activities_work= list(filter(filterfunction, self.activities_work))
+        self.activities_work = list(filter(filterfunction, self.activities_work))
 
-    def sort(self,sortfunction):
+    def sort(self, sortfunction):
         # sorterer og overskriver activities_work
         # Eksempel på anvendelse statsgenerator.sort(lambda a: -a.distance)
-        self.activities_work= list(sorted(self.activities_work, key=sortfunction))
+        self.activities_work = list(sorted(self.activities_work, key=sortfunction))
 
     def basicstats(self):
-        distance_max=max( self.activities_work, key=lambda a: a.distance)
-        distance_min=min( self.activities_work, key=lambda a: a.distance)
-        tempo_max=max( self.activities_work, key=lambda a: a.tempo)
-        tempo_min=min( self.activities_work, key=lambda a: a.tempo)
+        distance_max = max(self.activities_work, key=lambda a: a.distance)
+        distance_min = min(self.activities_work, key=lambda a: a.distance)
+        tempo_max = max(self.activities_work, key=lambda a: a.tempo)
+        tempo_min = min(self.activities_work, key=lambda a: a.tempo)
 
-        stats={}
-        stats['distance_max']=distance_max.distance
-        stats['distance_min']=distance_min.distance
-        stats['tempo_max']=tempo_max
-        stats['tempo_min']=tempo_min
-        return(stats)
-        
+        stats = {}
+        stats["distance_max"] = distance_max.distance
+        stats["distance_min"] = distance_min.distance
+        stats["tempo_max"] = tempo_max
+        stats["tempo_min"] = tempo_min
+        return stats
 
-    
-        
-if __name__ == '__main__':
-    client=stravaClient()
-    client.refresh_token = conf['STRAVA']['refresh_token']        # til test
-    client.getToken()          
+
+if __name__ == "__main__":
+    client = stravaClient()
+    client.refresh_token = conf["STRAVA"]["refresh_token"]  # til test
+    client.getToken()
     # FEJLER DA TOKEN I INI IKKE ANVENDES OG BYTTES
-    activities:list[Activity] = []  # samtlige aktiviteter. 
-    for activity in client.runningactivities(after_date=date(2022,1,1)):
-        print(activity['start_date_local'])
-        dc=Activity(activity['start_date_local'],activity['name'],activity['distance'],activity['moving_time'],activity['average_speed'],activity['sport_type'])
+    activities: list[Activity] = []  # samtlige aktiviteter.
+    for activity in client.runningactivities(after_date=date(2022, 1, 1)):
+        print(activity["start_date_local"])
+        dc = Activity(
+            activity["start_date_local"],
+            activity["name"],
+            activity["distance"],
+            activity["moving_time"],
+            activity["average_speed"],
+            activity["sport_type"],
+        )
         print(dc.date)
         activities.append(dc)
 
-    statsgenerator=StatsGenerator(activities)
+    statsgenerator = StatsGenerator(activities)
     print(len(statsgenerator.activities_work))
     statsgenerator.filter(lambda a: a.distance > 15000)
     statsgenerator.sort(lambda a: -a.distance)
@@ -125,5 +132,3 @@ if __name__ == '__main__':
     pp(statsgenerator.activities_work)
 
     print(statsgenerator.basicstats())
-
-    
