@@ -35,18 +35,7 @@ def exchange_token():
     client.exchange(authorization_code)
 
     global sg
-    activities = []
-    for activity in client.runningactivities(after_date=date(1980, 1, 1)):
-        dc = Activity(
-            activity["start_date_local"],
-            activity["name"],
-            activity["distance"],
-            activity["moving_time"],
-            activity["average_speed"],
-            activity["sport_type"],
-        )
-        activities.append(dc)
-    sg = StatsGenerator(activities)
+    sg = StatsGenerator(client.runningactivities())
 
     return render_template("stats.html", data=sg.activities_work, stats=sg.basicstats())
 

@@ -26,6 +26,7 @@ log.info("Start")
 
 @dataclass
 class Activity:
+    stravaid: str
     start_date_local: str
     name: str
     distance: float  # meter
@@ -55,20 +56,36 @@ class stravaClient(Strava):
         # henter alle aktiviteter ved at kalde API flere gange indtil der ikke er flere.
         # filtrerer desuden så det kun er løb.
         # self.getToken()
-        activities = []
+        activities_raw = []
         for page in range(1, 500):
             rv = self.getActivities(
                 200, page, datetime.combine(after_date, datetime.min.time())
             )
             if rv != []:
-                activities = activities + rv
+                activities_raw = activities_raw + rv
             else:
                 break
-        log.info(f"ANTAL {len(activities)} hentet")
-        activities = list(filter(lambda a: a["sport_type"] == "Run", activities))
-        log.info(f"heraf {len(activities)} løb")
-        activities = list(filter(lambda a: a["distance"] > 1, activities))
-        log.info(f"efter fjernelse af dist=0 : {len(activities)} ")
+        log.info(f"ANTAL {len(activities_raw)} hentet")
+        activities_raw = list(
+            filter(lambda a: a["sport_type"] == "Run", activities_raw)
+        )
+        log.info(f"heraf {len(activities_raw)} løb")
+        activities_raw = list(filter(lambda a: a["distance"] > 1, activities_raw))
+        log.info(f"efter fjernelse af dist=0 : {len(activities_raw)} ")
+
+        activities: list[Activity] = []  # samtlige aktiviteter.
+        for activity in activities_raw:
+            dc = Activity(
+                activity["stravaid"],
+                activity["start_date_local"],
+                activity["name"],
+                activity["distance"],
+                activity["moving_time"],
+                activity["average_speed"],
+                activity["sport_type"],
+            )
+            activities.append(dc)
+
         return activities
 
 
@@ -92,16 +109,17 @@ class StatsGenerator:
         self.activities_work = list(sorted(self.activities_work, key=sortfunction))
 
     def basicstats(self):
-        distance_max = max(self.activities_work, key=lambda a: a.distance)
-        distance_min = min(self.activities_work, key=lambda a: a.distance)
-        tempo_max = max(self.activities_work, key=lambda a: a.tempo)
-        tempo_min = min(self.activities_work, key=lambda a: a.tempo)
 
         stats = {}
-        stats["distance_max"] = distance_max.distance
-        stats["distance_min"] = distance_min.distance
-        stats["tempo_max"] = tempo_max
-        stats["tempo_min"] = tempo_min
+        stats["distance_max"] = max(self.activities_work, key=lambda a: a.distance)
+        stats["distance_min"] = min(self.activities_work, key=lambda a: a.distance)
+        stats["tempo_max"] = max(self.activities_work, key=lambda a: a.tempo)
+        stats["tempo_min"] = min(self.activities_work, key=lambda a: a.tempo)
+        stats["first_run"] = min(self.activities_work, key=lambda a: a.date)
+        stats["last_run"] = max(self.activities_work, key=lambda a: a.date)
+        stats["number_runs"] = len(self.activities_work)
+        stats["total_distance"] = sum(a.distance for a in self.activities_work)
+
         return stats
 
 
@@ -109,22 +127,7 @@ if __name__ == "__main__":
     client = stravaClient()
     client.refresh_token = conf["STRAVA"]["refresh_token"]  # til test
     client.getToken()
-    # FEJLER DA TOKEN I INI IKKE ANVENDES OG BYTTES
-    activities: list[Activity] = []  # samtlige aktiviteter.
-    for activity in client.runningactivities(after_date=date(2022, 1, 1)):
-        print(activity["start_date_local"])
-        dc = Activity(
-            activity["start_date_local"],
-            activity["name"],
-            activity["distance"],
-            activity["moving_time"],
-            activity["average_speed"],
-            activity["sport_type"],
-        )
-        print(dc.date)
-        activities.append(dc)
-
-    statsgenerator = StatsGenerator(activities)
+    statsgenerator = StatsGenerator(client.runningactivities())
     print(len(statsgenerator.activities_work))
     statsgenerator.filter(lambda a: a.distance > 15000)
     statsgenerator.sort(lambda a: -a.distance)
