@@ -18,7 +18,7 @@ def home():
         return render_template("login.html")
     else:
         return render_template(
-            "index.html", data=sg.activities_work, stats=sg.basicstats()
+            "stats.html", data=sg.activities_work, stats=sg.basicstats()
         )
 
 
@@ -36,7 +36,7 @@ def exchange_token():
 
     global sg
     activities = []
-    for activity in client.runningactivities(after_date=date(2022, 1, 1)):
+    for activity in client.runningactivities(after_date=date(1980, 1, 1)):
         dc = Activity(
             activity["start_date_local"],
             activity["name"],
@@ -48,7 +48,7 @@ def exchange_token():
         activities.append(dc)
     sg = StatsGenerator(activities)
 
-    return render_template("index.html", data=sg.activities_work, stats=sg.basicstats())
+    return render_template("stats.html", data=sg.activities_work, stats=sg.basicstats())
 
 
 @app.route("/halfmarathons")
@@ -56,8 +56,7 @@ def p_halfmarathons():
     sg.reset()
     sg.filter(lambda a: a.distance > 21000)
     sg.sort(lambda a: -a.tempo)
-    print(sg.activities_work[1])
-    return render_template("index.html", data=sg.activities_work)
+    return render_template("stats.html", data=sg.activities_work, stats=sg.basicstats())
 
 
 if __name__ == "__main__":

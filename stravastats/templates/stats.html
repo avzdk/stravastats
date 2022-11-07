@@ -2,12 +2,23 @@
 
 
 {% block leftblock %}
-<p>------------------</p>
+<h1>Statistk</h1>
+
 <p>Korteste tur: {{stats['distance_min']}}</p>
 <p>Længste tur: {{stats['distance_max']}}</p>
+<p>Hurtigste tur: {{stats['tempo_min']}}</p>
+<p>Langsomste tur: {{stats['tempo_max']}}</p>
+<p>Første tur: {{stats['first_run']}}</p>
+<p>Seneste tur: {{stats['last_run']}}</p>
+<p>Antal ture: {{stats['number_runs']}}</p>
+<p>Samlet distance: {{stats['total_distance']}}</p>
 
-<p>---</p>
-<table>
+
+{% endblock %}
+
+{% block rightblock %}
+
+<table class="table table-bordered">
     <tr>
         <th>Dato</th>
         <th>Tempo</th>
@@ -23,10 +34,5 @@
     </tr>
     {% endfor %}
 </table>
-
-{% endblock %}
-
-{% block rightblock %}
-<p>-----sdsdsdsd-------------</p>
 
 {% endblock %}
