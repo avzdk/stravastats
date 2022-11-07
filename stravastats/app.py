@@ -13,8 +13,10 @@ client=stravaClient()
 
 @app.route('/')
 def home():
-    sg.reset()
-    return render_template('index.html', data=sg.activities_work, stats=sg.basicstats())
+    if client.access_token == None:
+        return render_template('login.html')
+    else: 
+        return render_template('index.html', data=sg.activities_work, stats=sg.basicstats())
 
 @app.route('/login')
 def login():
@@ -35,7 +37,7 @@ def exchange_token():
     sg=StatsGenerator(activities)
     
 
-    return (f"OK! code:{authorization_code} scope:{scope}")
+    return render_template('index.html', data=sg.activities_work, stats=sg.basicstats())
     
 
 @app.route('/halfmarathons')
