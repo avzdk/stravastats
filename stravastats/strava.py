@@ -47,6 +47,8 @@ class Strava():
         self.auth_url = "https://www.strava.com/oauth/token"
         self.baseurl = "https://www.strava.com/api/v3/"
         urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+        self.access_token = None
+        self.refresh_token = None
     
     def getToken(self):
         print("GETTOKEN   - start")
