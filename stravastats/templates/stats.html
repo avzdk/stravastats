@@ -6,11 +6,11 @@
 
 
 <div class="input-group mb-3">
-    <input class="form-control" type="text" value="{{'%0.2f' | format(stats['distance_min'].distance/1000|float)}}"
-        id="distanceFilterMin">
+    <input class="form-control" type="text"
+        value="{{'%0.2f' | format(stats['runs']['distance_min'].distance/1000|float)}}" id="distanceFilterMin">
     <span class="input-group-text">-</span>
-    <input class="form-control" type="text" value="{{'%0.2f' | format(stats['distance_max'].distance/1000|float)}}"
-        id="distanceFilterMax">
+    <input class="form-control" type="text"
+        value="{{'%0.2f' | format(stats['runs']['distance_max'].distance/1000|float)}}" id="distanceFilterMax">
 </div>
 
 
@@ -22,14 +22,16 @@
 
 <button type="button" onclick="myFunction()" class="btn btn-primary">Filter</button>
 
+{% for s in stats['runs'] %}
+<p>{{s}}</p>
+{% endfor %}
 
-<p>Korteste tur: {{stats['distance_min']}}</p>
-<p>Længste tur: {{stats['distance_max']}}</p>
-<p>Hurtigste tur: {{stats['tempo_min']}}</p>
-<p>Langsomste tur: {{stats['tempo_max']}}</p>
-<p>Første tur: {{stats['first_run']}}</p>
-<p>Seneste tur: {{stats['last_run']}}</p>
-<p>Samlet {{'%0.0f' | format(stats['total_distance']/1000|float)}} km på {{stats['number_runs']}} ture.</p>
+<p>Korteste tur: {{stats['runs']['distance_min']}}</p>
+<p>Længste tur: {{stats['runs']['distance_max']}}</p>
+<p>Hurtigste tur: {{stats['runs']['tempo_min']}}</p>
+<p>Langsomste tur: {{stats['runs']['tempo_max']}}</p>
+<p>Første tur: {{stats['runs']['first_run']}}</p>
+<p>Seneste tur: {{stats['runs']['last_run']}}</p>
 
 
 {% endblock %}

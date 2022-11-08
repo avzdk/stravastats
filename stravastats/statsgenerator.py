@@ -115,14 +115,21 @@ class StatsGenerator:
     def basicstats(self):
 
         stats = {}
-        stats["distance_max"] = max(self.activities_work, key=lambda a: a.distance)
-        stats["distance_min"] = min(self.activities_work, key=lambda a: a.distance)
-        stats["tempo_max"] = max(self.activities_work, key=lambda a: a.tempo)
-        stats["tempo_min"] = min(self.activities_work, key=lambda a: a.tempo)
-        stats["first_run"] = min(self.activities_work, key=lambda a: a.date)
-        stats["last_run"] = max(self.activities_work, key=lambda a: a.date)
-        stats["number_runs"] = len(self.activities_work)
-        stats["total_distance"] = sum(a.distance for a in self.activities_work)
+        stats["runs"] = {}
+        stats["runs"]["distance_max"] = max(
+            self.activities_work, key=lambda a: a.distance
+        )
+        stats["runs"]["distance_min"] = min(
+            self.activities_work, key=lambda a: a.distance
+        )
+        stats["runs"]["tempo_max"] = max(self.activities_work, key=lambda a: a.tempo)
+        stats["runs"]["tempo_min"] = min(self.activities_work, key=lambda a: a.tempo)
+        stats["runs"]["first_run"] = min(self.activities_work, key=lambda a: a.date)
+        stats["runs"]["last_run"] = max(self.activities_work, key=lambda a: a.date)
+        stats["totals"] = {
+            "number_runs": len(self.activities_work),
+            "total_distance": sum(a.distance for a in self.activities_work),
+        }
 
         return stats
 
