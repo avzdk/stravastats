@@ -2,7 +2,26 @@
 
 
 {% block leftblock %}
-<h1>Statistk</h1>
+<h1>Statistik</h1>
+
+
+<div class="input-group mb-3">
+    <input class="form-control" type="text" value="{{'%0.2f' | format(stats['distance_min'].distance/1000|float)}}"
+        id="distanceFilterMin">
+    <span class="input-group-text">-</span>
+    <input class="form-control" type="text" value="{{'%0.2f' | format(stats['distance_max'].distance/1000|float)}}"
+        id="distanceFilterMax">
+</div>
+
+
+<div class="input-group mb-3">
+    <input id="startDate" value="2022-01-01" class="form-control" type="date" />
+    <span class="input-group-text">-</span>
+    <input id="endDate" value="2022-12-31" class="form-control" type="date" />
+</div>
+
+<button type="button" onclick="myFunction()" class="btn btn-primary">Filter</button>
+
 
 <p>Korteste tur: {{stats['distance_min']}}</p>
 <p>Længste tur: {{stats['distance_max']}}</p>
@@ -10,8 +29,7 @@
 <p>Langsomste tur: {{stats['tempo_max']}}</p>
 <p>Første tur: {{stats['first_run']}}</p>
 <p>Seneste tur: {{stats['last_run']}}</p>
-<p>Antal ture: {{stats['number_runs']}}</p>
-<p>Samlet distance: {{stats['total_distance']}}</p>
+<p>Samlet {{'%0.0f' | format(stats['total_distance']/1000|float)}} km på {{stats['number_runs']}} ture.</p>
 
 
 {% endblock %}
@@ -35,4 +53,19 @@
     {% endfor %}
 </table>
 
+{% endblock %}
+
+{% block scriptblock %}
+<script>
+    function myFunction() {
+        var distanceMin = document.getElementById("distanceFilterMin").value;
+        var distanceMax = document.getElementById("distanceFilterMax").value;
+        var startDate = document.getElementById("startDate").value;
+        var endDate = document.getElementById("endDate").value;
+        console.log(`/filter?distanceMin=${distanceMin}&distanceMax=${distanceMax}&startDate=${startDate}&endDate=${endDate}`);
+        window.location.href = `/filter?distanceMin=${distanceMin}&distanceMax=${distanceMax}&startDate=${startDate}&endDate=${endDate}`;
+
+
+    }
+</script>
 {% endblock %}

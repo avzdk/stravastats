@@ -22,6 +22,20 @@ def home():
         )
 
 
+@app.route("/filter")
+def filter():
+    startDate = request.args.get("startDate")
+    endDate = request.args.get("endDate")
+    distanceMin = float(request.args.get("distanceMin")) * 1000
+    distanceMax = float(request.args.get("distanceMax")) * 1000
+    print(f"--------ARGUMENTER -------- {distanceMin} {distanceMax} ")
+    global sg
+    sg.reset()
+    sg.filter(lambda a: a.distance >= distanceMin)
+    sg.filter(lambda a: a.distance <= distanceMax)
+    return render_template("stats.html", data=sg.activities_work, stats=sg.basicstats())
+
+
 @app.route("/login")
 def login():
     return render_template("login.html")
