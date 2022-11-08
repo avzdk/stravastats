@@ -32,6 +32,8 @@
 <p>Langsomste tur: {{stats['runs']['tempo_max']}}</p>
 <p>Første tur: {{stats['runs']['first_run']}}</p>
 <p>Seneste tur: {{stats['runs']['last_run']}}</p>
+<p>Samlet {{'%0.0f' | format(stats['totals']['total_distance']/1000|float)}} km på {{stats['totals']['number_runs']}}
+    ture.</p>
 
 
 {% endblock %}
