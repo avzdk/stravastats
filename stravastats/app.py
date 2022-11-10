@@ -44,6 +44,14 @@ def filter():
     return render_template("stats.html", data=sg.activities_work, stats=sg.basicstats())
 
 
+@app.route("/chart")
+def chart():
+    global sg
+    x = ["giraffes", "orangutans", "monkeys"]
+    y = [12, 18, 29]
+    return render_template("chart.html", x=x, y=y, stats=sg.basicstats())
+
+
 @app.route("/login")
 def login():
     return render_template("login.html")

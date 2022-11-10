@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block scriptblockTop %}
+<script src='https://cdn.plot.ly/plotly-2.16.1.min.js'></script>
+{% endblock %}
+
+{% block leftblock %}
+<h1>Chart</h1>
+<p>Samlet {{stats['totals']['total_distance']}} km på {{stats['totals']['number_runs']}}
+    ture. {{'%0.2f' | format(stats['totals']['total_distance']/stats['totals']['days']*7| float)}} km/uge
+    {{'%0.1f' | format(stats['totals']['number_runs']/stats['totals']['days']*7 | float)}} ture/uge.
+    {{ x|safe }}
+</p>
+
+
+{% endblock %}
+
+{% block rightblock %}
+<div id='myDiv'></div>
+
+{% endblock %}
+
+{% block scriptblock %}
+<script>
+
+    var x = {{ x| safe }};
+    var y = {{ y| safe }};
+
+    var trace2 = {
+        x: x,
+        y: y,
+        name: 'LA Zoo',
+        type: 'bar'
+    };
+
+    var trace1 = {
+        x: ['giraffes', 'orangutans', 'monkeys'],
+        y: [20, 14, 23],
+        name: 'runs',
+        type: 'bar'
+    };
+
+
+
+    var data = [trace2];
+
+    var layout = { barmode: 'stack' };
+
+    Plotly.newPlot('myDiv', data, layout);
+
+
+</script>
+
+{% endblock %}
