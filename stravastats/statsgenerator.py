@@ -145,6 +145,19 @@ class StatsGenerator:
 
         return stats
 
+    def weeklystats(self):
+        # dan listen af uger så der er plads til uger uden løb
+        d = self.basicstats()["runs"]["first_run"].date
+        stats = {}
+        while d < self.basicstats()["runs"]["last_run"].date + timedelta(days=7):
+            week = str(d.isocalendar().year) + "." + str(d.isocalendar().week).zfill(2)
+            stats[week] = 0
+            d = d + timedelta(days=7)
+
+        for a in self.activities_work:
+            stats[a.week] = stats[a.week] + a.distance
+        return stats
+
 
 if __name__ == "__main__":
     client = stravaClient()
@@ -160,3 +173,4 @@ if __name__ == "__main__":
 
     print(statsgenerator.basicstats())
     print(statsgenerator.activities_work[0].week)
+    print(statsgenerator.weeklystats())

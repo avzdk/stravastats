@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "base2.html" %}
 
 {% block scriptblockTop %}
 <script src='https://cdn.plot.ly/plotly-2.16.1.min.js'></script>
@@ -9,13 +9,26 @@
 <p>Samlet {{stats['totals']['total_distance']}} km på {{stats['totals']['number_runs']}}
     ture. {{'%0.2f' | format(stats['totals']['total_distance']/stats['totals']['days']*7| float)}} km/uge
     {{'%0.1f' | format(stats['totals']['number_runs']/stats['totals']['days']*7 | float)}} ture/uge.
-    {{ x|safe }}
 </p>
 
 
 {% endblock %}
 
 {% block rightblock %}
+<div class="input-group mb-3">
+    <input class="form-control" type="text" value="{{stats['runs']['distance_min'].distance}}" id="distanceFilterMin">
+    <span class="input-group-text">-</span>
+    <input class="form-control" type="text" value="{{stats['runs']['distance_max'].distance}}" id="distanceFilterMax">
+</div>
+
+
+<div class="input-group mb-3">
+    <input id="startDate" value="2022-01-01" class="form-control" type="date" />
+    <span class="input-group-text">-</span>
+    <input id="endDate" value="2022-12-31" class="form-control" type="date" />
+</div>
+
+<button type="button" onclick="filter()" class="btn btn-primary">Filter</button>
 <div id='myDiv'></div>
 
 {% endblock %}
@@ -44,7 +57,7 @@
 
     var data = [trace2];
 
-    var layout = { barmode: 'stack' };
+    var layout = { barmode: 'stack', };
 
     Plotly.newPlot('myDiv', data, layout);
 

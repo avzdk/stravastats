@@ -12,23 +12,12 @@ app.config["TEMPLATES_AUTO_RELOAD"] = True
 client = stravaClient()
 
 
-@app.route("/")
-def home():
-    if client.access_token == None:
-        return render_template("login.html")
-    else:
-        return render_template(
-            "stats.html", data=sg.activities_work, stats=sg.basicstats()
-        )
+def filter(args):
+    startDateArray = args.get("startDate").split("-")
+    endDateArray = args.get("endDate").split("-")
+    distanceMin = float(args.get("distanceMin"))
+    distanceMax = float(args.get("distanceMax"))
 
-
-@app.route("/filter")
-def filter():
-    startDateArray = request.args.get("startDate").split("-")
-    endDateArray = request.args.get("endDate").split("-")
-    distanceMin = float(request.args.get("distanceMin"))
-    distanceMax = float(request.args.get("distanceMax"))
-    print(f"--------ARGUMENTER -------- {distanceMin} {distanceMax} ")
     global sg
     sg.reset()
     sg.filter(lambda a: a.distance >= distanceMin)
@@ -41,14 +30,36 @@ def filter():
         lambda a: a.date
         <= date(int(endDateArray[0]), int(endDateArray[1]), int(endDateArray[2]))
     )
+
+
+@app.route("/")
+def home():
+    if client.access_token == None:
+        return render_template("login.html")
+    else:
+        return render_template(
+            "stats.html", data=sg.activities_work, stats=sg.basicstats()
+        )
+
+
+@app.route("/filter")
+def filter2():
+    filter(request.args)
     return render_template("stats.html", data=sg.activities_work, stats=sg.basicstats())
 
 
 @app.route("/chart")
 def chart():
+    filter(request.args)
     global sg
-    x = ["giraffes", "orangutans", "monkeys"]
-    y = [12, 18, 29]
+
+    x = []
+    y = []
+    weeklystats = sg.weeklystats()
+    for week in weeklystats:
+        x.append("w" + week)
+        y.append(weeklystats[week])
+
     return render_template("chart.html", x=x, y=y, stats=sg.basicstats())
 
 

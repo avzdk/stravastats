@@ -18,7 +18,7 @@
     <input id="endDate" value="2022-12-31" class="form-control" type="date" />
 </div>
 
-<button type="button" onclick="myFunction()" class="btn btn-primary">Filter</button>
+<button type="button" onclick="filter()" class="btn btn-primary">Filter</button>
 
 
 
@@ -82,7 +82,7 @@
     <div class="card-body">
         <b>Seneste tur</b></br>
         <b>{{stats['runs']['last_run'].date}} </b> <a target="_new"
-            href=" {{stats['runs']['last_run'].stravaurl}} ">{{stats['runs']['last_run'].name}}</a></br>
+            href=" {{stats['runs']['distance_max'].stravaurl}} ">{{stats['runs']['last_run'].name}}</a></br>
 
         Distance: {{stats['runs']['last_run'].distance}} km -> Tempo: {{stats['runs']['last_run'].tempo_in_txt}}
     </div>
@@ -113,16 +113,5 @@
 {% endblock %}
 
 {% block scriptblock %}
-<script>
-    function myFunction() {
-        var distanceMin = document.getElementById("distanceFilterMin").value;
-        var distanceMax = document.getElementById("distanceFilterMax").value;
-        var startDate = document.getElementById("startDate").value;
-        var endDate = document.getElementById("endDate").value;
-        console.log(`/filter?distanceMin=${distanceMin}&distanceMax=${distanceMax}&startDate=${startDate}&endDate=${endDate}`);
-        window.location.href = `/filter?distanceMin=${distanceMin}&distanceMax=${distanceMax}&startDate=${startDate}&endDate=${endDate}`;
 
-
-    }
-</script>
 {% endblock %}
