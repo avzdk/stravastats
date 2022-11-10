@@ -44,6 +44,14 @@ class Activity:
         return datetime.strptime(self.start_date_local[0:10], "%Y-%m-%d").date()
 
     @property
+    def week(self):  # 2022.42
+        return (
+            str(self.date.isocalendar().year)
+            + "."
+            + str(self.date.isocalendar().week).zfill(2)
+        )
+
+    @property
     def tempo_in_txt(self):
         return str(timedelta(minutes=self.tempo))[2:7]
 
@@ -126,7 +134,11 @@ class StatsGenerator:
         stats["runs"]["tempo_min"] = min(self.activities_work, key=lambda a: a.tempo)
         stats["runs"]["first_run"] = min(self.activities_work, key=lambda a: a.date)
         stats["runs"]["last_run"] = max(self.activities_work, key=lambda a: a.date)
+
         stats["totals"] = {
+            "days": abs(
+                stats["runs"]["last_run"].date - stats["runs"]["first_run"].date
+            ).days,
             "number_runs": len(self.activities_work),
             "total_distance": round(sum(a.distance for a in self.activities_work), 2),
         }
@@ -140,10 +152,11 @@ if __name__ == "__main__":
     client.getToken()
     statsgenerator = StatsGenerator(client.runningactivities())
     print(len(statsgenerator.activities_work))
-    statsgenerator.filter(lambda a: a.distance > 15)
+    statsgenerator.filter(lambda a: a.distance > 1)
     statsgenerator.filter(lambda a: a.date > date(2022, 1, 1))
     statsgenerator.sort(lambda a: -a.distance)
     print(len(statsgenerator.activities_work))
     pp(statsgenerator.activities_work)
 
     print(statsgenerator.basicstats())
+    print(statsgenerator.activities_work[0].week)

@@ -23,7 +23,9 @@
 
 
 <p>Samlet {{stats['totals']['total_distance']}} km på {{stats['totals']['number_runs']}}
-    ture.</p>
+    ture. {{'%0.2f' | format(stats['totals']['total_distance']/stats['totals']['days']*7| float)}} km/uge
+    {{'%0.1f' | format(stats['totals']['number_runs']/stats['totals']['days']*7 | float)}} ture/uge.
+</p>
 
 <div class="card">
     <div class="card-body">
@@ -49,7 +51,7 @@
     <div class="card-body">
         <b>Hurtigste tur</b></br>
         {{stats['runs']['tempo_min'].date}} <a target="_new"
-            href=" {{stats['runs']['distance_max'].stravaurl}} ">{{stats['runs']['tempo_min'].name}}</a></br>
+            href=" {{stats['runs']['tempo_min'].stravaurl}} ">{{stats['runs']['tempo_min'].name}}</a></br>
 
         Distance: {{stats['runs']['tempo_min'].distance}} km -> <b>Tempo:
             {{stats['runs']['tempo_min'].tempo_in_txt}}</b>
@@ -59,7 +61,7 @@
     <div class="card-body">
         <b>Langsomste tur</b></br>
         {{stats['runs']['tempo_max'].date}} <a target="_new"
-            href=" {{stats['runs']['distance_max'].stravaurl}} ">{{stats['runs']['tempo_max'].name}}</a></br>
+            href=" {{stats['runs']['tempo_max'].stravaurl}} ">{{stats['runs']['tempo_max'].name}}</a></br>
 
         Distance: {{stats['runs']['tempo_max'].distance}} km -> <b>Tempo:
             {{stats['runs']['tempo_max'].tempo_in_txt}}</b>
@@ -70,7 +72,7 @@
     <div class="card-body">
         <b>Første tur</b></br>
         <b>{{stats['runs']['first_run'].date}} </b> <a target="_new"
-            href=" {{stats['runs']['distance_max'].stravaurl}} ">{{stats['runs']['first_run'].name}}</a></br>
+            href=" {{stats['runs']['first_run'].stravaurl}} ">{{stats['runs']['first_run'].name}}</a></br>
 
         Distance: {{stats['runs']['first_run'].distance}} km -> Tempo: {{stats['runs']['first_run'].tempo_in_txt}}
     </div>
@@ -80,7 +82,7 @@
     <div class="card-body">
         <b>Seneste tur</b></br>
         <b>{{stats['runs']['last_run'].date}} </b> <a target="_new"
-            href=" {{stats['runs']['distance_max'].stravaurl}} ">{{stats['runs']['last_run'].name}}</a></br>
+            href=" {{stats['runs']['last_run'].stravaurl}} ">{{stats['runs']['last_run'].name}}</a></br>
 
         Distance: {{stats['runs']['last_run'].distance}} km -> Tempo: {{stats['runs']['last_run'].tempo_in_txt}}
     </div>
