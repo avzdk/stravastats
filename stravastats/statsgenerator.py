@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-# Last Modified: 2022/11/07 14:16:37
+# Last Modified: 2022/11/10 12:05:34
 from dataclasses import dataclass
 from strava import Strava
 from datetime import datetime, date, timedelta
@@ -83,7 +83,7 @@ class stravaClient(Strava):
                 str(activity["id"]),
                 activity["start_date_local"],
                 activity["name"],
-                activity["distance"],
+                round(activity["distance"] / 1000, 2),
                 activity["moving_time"],
                 activity["average_speed"],
                 activity["sport_type"],

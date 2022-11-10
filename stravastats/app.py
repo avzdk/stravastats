@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-# Last Modified: 2022/11/07 14:16:37
+# Last Modified: 2022/11/10 12:06:37
 
 
 from flask import Flask, request, stream_with_context, render_template
@@ -26,8 +26,8 @@ def home():
 def filter():
     startDate = request.args.get("startDate")
     endDate = request.args.get("endDate")
-    distanceMin = float(request.args.get("distanceMin")) * 1000
-    distanceMax = float(request.args.get("distanceMax")) * 1000
+    distanceMin = float(request.args.get("distanceMin"))
+    distanceMax = float(request.args.get("distanceMax"))
     print(f"--------ARGUMENTER -------- {distanceMin} {distanceMax} ")
     global sg
     sg.reset()
@@ -57,7 +57,7 @@ def exchange_token():
 @app.route("/halfmarathons")
 def p_halfmarathons():
     sg.reset()
-    sg.filter(lambda a: a.distance > 21000)
+    sg.filter(lambda a: a.distance > 21)
     sg.sort(lambda a: -a.tempo)
     return render_template("stats.html", data=sg.activities_work, stats=sg.basicstats())
 
