@@ -128,7 +128,7 @@ class StatsGenerator:
         stats["runs"]["last_run"] = max(self.activities_work, key=lambda a: a.date)
         stats["totals"] = {
             "number_runs": len(self.activities_work),
-            "total_distance": sum(a.distance for a in self.activities_work),
+            "total_distance": round(sum(a.distance for a in self.activities_work), 2),
         }
 
         return stats
@@ -140,7 +140,8 @@ if __name__ == "__main__":
     client.getToken()
     statsgenerator = StatsGenerator(client.runningactivities())
     print(len(statsgenerator.activities_work))
-    statsgenerator.filter(lambda a: a.distance > 15000)
+    statsgenerator.filter(lambda a: a.distance > 15)
+    statsgenerator.filter(lambda a: a.date > date(2022, 1, 1))
     statsgenerator.sort(lambda a: -a.distance)
     print(len(statsgenerator.activities_work))
     pp(statsgenerator.activities_work)
