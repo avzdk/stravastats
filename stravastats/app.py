@@ -24,8 +24,8 @@ def home():
 
 @app.route("/filter")
 def filter():
-    startDate = request.args.get("startDate")
-    endDate = request.args.get("endDate")
+    startDateArray = request.args.get("startDate").split("-")
+    endDateArray = request.args.get("endDate").split("-")
     distanceMin = float(request.args.get("distanceMin"))
     distanceMax = float(request.args.get("distanceMax"))
     print(f"--------ARGUMENTER -------- {distanceMin} {distanceMax} ")
@@ -33,6 +33,14 @@ def filter():
     sg.reset()
     sg.filter(lambda a: a.distance >= distanceMin)
     sg.filter(lambda a: a.distance <= distanceMax)
+    sg.filter(
+        lambda a: a.date
+        >= date(int(startDateArray[0]), int(startDateArray[1]), int(startDateArray[2]))
+    )
+    sg.filter(
+        lambda a: a.date
+        <= date(int(endDateArray[0]), int(endDateArray[1]), int(endDateArray[2]))
+    )
     return render_template("stats.html", data=sg.activities_work, stats=sg.basicstats())
 
 
