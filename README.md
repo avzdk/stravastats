@@ -50,4 +50,6 @@ sequenceDiagram
     App->>Strava : getActivities(access_token)
     Strava-->>App : Activities
     App-->>Browser : Stats
+    Browser->>App : Filter
+    App-->>Browser : Stats
 ```
