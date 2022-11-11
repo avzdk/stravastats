@@ -13,23 +13,25 @@ client = stravaClient()
 
 
 def use_filter(args):
-    startDateArray = args.get("startDate").split("-")
-    endDateArray = args.get("endDate").split("-")
-    distanceMin = float(args.get("distanceMin"))
-    distanceMax = float(args.get("distanceMax"))
-
     global sg
     sg.reset()
-    sg.filter(lambda a: a.distance >= distanceMin)
-    sg.filter(lambda a: a.distance <= distanceMax)
-    sg.filter(
-        lambda a: a.date
-        >= date(int(startDateArray[0]), int(startDateArray[1]), int(startDateArray[2]))
-    )
-    sg.filter(
-        lambda a: a.date
-        <= date(int(endDateArray[0]), int(endDateArray[1]), int(endDateArray[2]))
-    )
+    if len(args) > 0:
+        startDateArray = args.get("startDate").split("-")
+        endDateArray = args.get("endDate").split("-")
+        distanceMin = float(args.get("distanceMin"))
+        distanceMax = float(args.get("distanceMax"))
+        sg.filter(lambda a: a.distance >= distanceMin)
+        sg.filter(lambda a: a.distance <= distanceMax)
+        sg.filter(
+            lambda a: a.date
+            >= date(
+                int(startDateArray[0]), int(startDateArray[1]), int(startDateArray[2])
+            )
+        )
+        sg.filter(
+            lambda a: a.date
+            <= date(int(endDateArray[0]), int(endDateArray[1]), int(endDateArray[2]))
+        )
 
 
 @app.route("/exchange_token")
@@ -39,10 +41,17 @@ def exchange_token():
     print(f"Modtaget autorization_code  {authorization_code}")
     client.exchange(authorization_code)
 
+    # global sg
+    # sg = StatsGenerator(client.runningactivities())
+    # return render_template("stats.html", data=sg.activities_work, stats=sg.basicstats())
+    return render_template("athlete.html", data=client.getAthlete())
+
+
+@app.route("/loaddata")
+def loaddata():
     global sg
     sg = StatsGenerator(client.runningactivities())
-
-    return render_template("stats.html", data=sg.activities_work, stats=sg.basicstats())
+    return "ok"
 
 
 @app.route("/")
@@ -57,6 +66,7 @@ def home():
 
 @app.route("/filter")
 def filter():
+
     use_filter(request.args)
     return render_template("stats.html", data=sg.activities_work, stats=sg.basicstats())
 
