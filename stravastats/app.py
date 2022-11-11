@@ -81,14 +81,6 @@ def exchange_token():
     return render_template("stats.html", data=sg.activities_work, stats=sg.basicstats())
 
 
-@app.route("/halfmarathons")
-def p_halfmarathons():
-    sg.reset()
-    sg.filter(lambda a: a.distance > 21)
-    sg.sort(lambda a: -a.tempo)
-    return render_template("stats.html", data=sg.activities_work, stats=sg.basicstats())
-
-
 if __name__ == "__main__":
 
     app.run()
