@@ -12,7 +12,7 @@ app.config["TEMPLATES_AUTO_RELOAD"] = True
 client = stravaClient()
 
 
-def filter(args):
+def use_filter(args):
     startDateArray = args.get("startDate").split("-")
     endDateArray = args.get("endDate").split("-")
     distanceMin = float(args.get("distanceMin"))
@@ -32,6 +32,19 @@ def filter(args):
     )
 
 
+@app.route("/exchange_token")
+def exchange_token():
+    authorization_code = request.args.get("code")
+    scope = request.args.get("scope")
+    print(f"Modtaget autorization_code  {authorization_code}")
+    client.exchange(authorization_code)
+
+    global sg
+    sg = StatsGenerator(client.runningactivities())
+
+    return render_template("stats.html", data=sg.activities_work, stats=sg.basicstats())
+
+
 @app.route("/")
 def home():
     if client.access_token == None:
@@ -43,14 +56,14 @@ def home():
 
 
 @app.route("/filter")
-def filter2():
-    filter(request.args)
+def filter():
+    use_filter(request.args)
     return render_template("stats.html", data=sg.activities_work, stats=sg.basicstats())
 
 
 @app.route("/chart")
 def chart():
-    filter(request.args)
+    use_filter(request.args)
     global sg
 
     x = []
@@ -66,19 +79,6 @@ def chart():
 @app.route("/login")
 def login():
     return render_template("login.html")
-
-
-@app.route("/exchange_token")
-def exchange_token():
-    authorization_code = request.args.get("code")
-    scope = request.args.get("scope")
-    print(f"Modtaget autorization_code  {authorization_code}")
-    client.exchange(authorization_code)
-
-    global sg
-    sg = StatsGenerator(client.runningactivities())
-
-    return render_template("stats.html", data=sg.activities_work, stats=sg.basicstats())
 
 
 if __name__ == "__main__":
