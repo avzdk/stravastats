@@ -56,12 +56,14 @@ def loaddata():
 
 @app.route("/")
 def home():
-    if client.access_token == None:
-        return render_template("login.html")
-    else:
-        return render_template(
-            "stats.html", data=sg.activities_work, stats=sg.basicstats()
-        )
+    return render_template("login.html")
+
+    # if client.access_token == None:
+
+    # else:
+    #    return render_template(
+    #        "stats.html", data=sg.activities_work, stats=sg.basicstats()
+    #    )
 
 
 @app.route("/filter")
@@ -75,15 +77,29 @@ def filter():
 def chart():
     use_filter(request.args)
     global sg
-
-    x = []
-    y = []
+    # bar hcart by weeks
+    bar_x = []
+    bar_y = []
     weeklystats = sg.weeklystats()
     for week in weeklystats:
-        x.append("w" + week)
-        y.append(weeklystats[week])
+        bar_x.append("w" + week)
+        bar_y.append(weeklystats[week])
 
-    return render_template("chart.html", x=x, y=y, stats=sg.basicstats())
+    # scatterplot
+    scat_x = []
+    scat_y = []
+    for a in sg.activities_work:
+        scat_x.append(a.distance)
+        scat_y.append(a.tempo)
+
+    return render_template(
+        "chart.html",
+        bar_x=bar_x,
+        bar_y=bar_y,
+        scat_x=scat_x,
+        scat_y=scat_y,
+        stats=sg.basicstats(),
+    )
 
 
 @app.route("/login")

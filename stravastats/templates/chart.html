@@ -21,45 +21,52 @@
     <input class="form-control" type="text" value="{{stats['runs']['distance_max'].distance}}" id="distanceFilterMax">
 </div>
 
+{% set startdate = stats['runs']['first_run'].date|string %}
 
 <div class="input-group mb-3">
-    <input id="startDate" value="2022-01-01" class="form-control" type="date" />
+    <input id="startDate" value="{{stats['runs']['first_run'].date|string }}" class="form-control" type="date" />
     <span class="input-group-text">-</span>
-    <input id="endDate" value="2022-12-31" class="form-control" type="date" />
+    <input id="endDate" value="{{stats['runs']['last_run'].date|string}}" class="form-control" type="date" />
 </div>
 
 <button type="button" onclick="filter()" class="btn btn-primary">Filter</button>
-<div id='myDiv'></div>
+<div id='barchart_placeholder'></div>
+<div id='scatchart_placeholder'></div>
 
 {% endblock %}
 
 {% block scriptblock %}
 <script>
 
-    var x = {{ x| safe }};
-    var y = {{ y| safe }};
+    var bar_x = {{ bar_x| safe }};
+    var bar_y = {{ bar_y| safe }};
 
-    var trace1 = {
-        x: x,
-        y: y,
+    var bardata = {
+        x: bar_x,
+        y: bar_y,
         name: 'Distance',
         type: 'bar'
     };
 
-    var trace2 = {
-        x: x,
-        y: y,
+    var data = [bardata];
+    var layout = { barmode: 'stack', yaxis: { title: { text: 'Distance/uge' } } };
+    Plotly.newPlot('barchart_placeholder', data, layout);
+
+    var scat_x = {{ scat_x| safe }};
+    var scat_y = {{ scat_y| safe }};
+
+    var scatdata = {
+        x: scat_x,
+        y: scat_y,
+        mode: 'markers',
+        marker: { size: 3 },
         name: 'Distance',
-        type: 'scatter'
+        type: 'scatter',
     };
 
-
-    var data = [trace1, trace2];
-
-    var layout = { barmode: 'stack', };
-
-    Plotly.newPlot('myDiv', data, layout);
-
+    var data = [scatdata];
+    var layout = { height: 1000, xaxis: { title: { text: 'Distance' } }, yaxis: { title: { text: 'Tempo' } } };
+    Plotly.newPlot('scatchart_placeholder', data, layout);
 
 </script>
 
