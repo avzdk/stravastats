@@ -39,23 +39,22 @@
     var x = {{ x| safe }};
     var y = {{ y| safe }};
 
+    var trace1 = {
+        x: x,
+        y: y,
+        name: 'Distance',
+        type: 'bar'
+    };
+
     var trace2 = {
         x: x,
         y: y,
-        name: 'LA Zoo',
-        type: 'bar'
-    };
-
-    var trace1 = {
-        x: ['giraffes', 'orangutans', 'monkeys'],
-        y: [20, 14, 23],
-        name: 'runs',
-        type: 'bar'
+        name: 'Distance',
+        type: 'scatter'
     };
 
 
-
-    var data = [trace2];
+    var data = [trace1, trace2];
 
     var layout = { barmode: 'stack', };
 
