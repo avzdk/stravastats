@@ -6,17 +6,17 @@
 
 
 <div class="input-group mb-3">
-    <input class="form-control" type="text" value="{{stats['runs']['distance_min'].distance}}" id="distanceFilterMin">
+    <input class="form-control" type="text" id="distanceFilterMin">
     <span class="input-group-text">-</span>
-    <input class="form-control" type="text" value="{{stats['runs']['distance_max'].distance}}" id="distanceFilterMax">
+    <input class="form-control" type="text" id="distanceFilterMax">
 </div>
 
 {% set startdate = stats['runs']['first_run'].date|string %}
 
 <div class="input-group mb-3">
-    <input id="startDate" value="{{stats['runs']['first_run'].date|string }}" class="form-control" type="date" />
+    <input id="startDate" class="form-control" type="date" />
     <span class="input-group-text">-</span>
-    <input id="endDate" value="{{stats['runs']['last_run'].date|string}}" class="form-control" type="date" />
+    <input id="endDate" class="form-control" type="date" />
 </div>
 
 <button type="button" onclick="filter()" class="btn btn-primary">Filter</button>

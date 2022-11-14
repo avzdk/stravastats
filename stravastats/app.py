@@ -3,9 +3,10 @@
 # Last Modified: 2022/11/10 12:06:37
 
 
-from flask import Flask, request, stream_with_context, render_template
-from statsgenerator import stravaClient, StatsGenerator, Activity
 from datetime import date
+
+from flask import Flask, render_template, request, stream_with_context
+from statsgenerator import Activity, StatsGenerator, stravaClient
 
 app = Flask(__name__)
 app.config["TEMPLATES_AUTO_RELOAD"] = True
@@ -16,10 +17,10 @@ def use_filter(args):
     global sg
     sg.reset()
     if len(args) > 0:
-        startDateArray = args.get("startDate").split("-")
-        endDateArray = args.get("endDate").split("-")
-        distanceMin = float(args.get("distanceMin"))
-        distanceMax = float(args.get("distanceMax"))
+        startDateArray = args.get("startDate", default="2000-01-01").split("-")
+        endDateArray = args.get("endDate", default="2030-01-01").split("-")
+        distanceMin = float(args.get("distanceMin", default=0))
+        distanceMax = float(args.get("distanceMax", default=1000))
         sg.filter(lambda a: a.distance >= distanceMin)
         sg.filter(lambda a: a.distance <= distanceMax)
         sg.filter(
@@ -88,9 +89,12 @@ def chart():
     # scatterplot
     scat_x = []
     scat_y = []
+    scat_text = []
     for a in sg.activities_work:
         scat_x.append(a.distance)
         scat_y.append(a.tempo)
+
+        scat_text.append(a.date.strftime("%m/%d/%Y") + " id:+")
 
     return render_template(
         "chart.html",
@@ -98,6 +102,7 @@ def chart():
         bar_y=bar_y,
         scat_x=scat_x,
         scat_y=scat_y,
+        scat_text=scat_text,
         stats=sg.basicstats(),
     )
 
