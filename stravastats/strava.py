@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-# Last Modified: 2022/11/02 12:09:35
+# Last Modified: 2022/11/15 10:40:45
 
 """
 Wrapper til Strava.
@@ -107,6 +107,13 @@ class Strava:
         athelete = requests.get(self.baseurl + "athlete", headers=header).json()
         return athelete
 
+    def getActivity(self, id):
+        header = {"Authorization": "Bearer " + self.access_token}
+        activity = requests.get(
+            self.baseurl + "activities/" + id, headers=header
+        ).json()
+        return activity
+
 
 if __name__ == "__main__":
     client = Strava()
@@ -117,3 +124,5 @@ if __name__ == "__main__":
     activities = client.getActivities(5)
     for a in activities:
         pp(a["name"])
+    activity = client.getActivity("4520839668")
+    pp(activity)
