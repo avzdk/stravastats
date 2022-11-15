@@ -15,10 +15,17 @@
 {% endblock %}
 
 {% block rightblock %}
+<p>Distance</p>
 <div class="input-group mb-3">
     <input class="form-control" type="text" id="distanceFilterMin">
     <span class="input-group-text">-</span>
     <input class="form-control" type="text" id="distanceFilterMax">
+</div>
+<p>Tempo</p>
+<div class="input-group mb-3">
+    <input class="form-control" type="text" id="tempoFilterMin">
+    <span class="input-group-text">-</span>
+    <input class="form-control" type="text" id="tempoFilterMax">
 </div>
 
 {% set startdate = stats['runs']['first_run'].date|string %}
@@ -29,7 +36,8 @@
     <input id="endDate" class="form-control" type="date" />
 </div>
 
-<button type="button" onclick="filter()" class="btn btn-primary">Filter</button>
+<button type="button" onclick="showchart()" class="btn btn-primary">Filtrer</button>
+<button type="button" onclick="showlist()" class="btn btn-primary">Vis liste</button>
 <div id='barchart_placeholder'></div>
 <div id='scatchart_placeholder'></div>
 

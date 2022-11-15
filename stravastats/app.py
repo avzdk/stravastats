@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-# Last Modified: 2022/11/10 12:06:37
+# Last Modified: 2022/11/15 10:03:22
 
 
 from datetime import date
@@ -21,8 +21,12 @@ def use_filter(args):
         endDateArray = args.get("endDate", default="2030-01-01").split("-")
         distanceMin = float(args.get("distanceMin", default=0))
         distanceMax = float(args.get("distanceMax", default=1000))
+        tempoMin = args.get("tempoMin", default="00:00")
+        tempoMax = args.get("tempoMax", default="59:00")
         sg.filter(lambda a: a.distance >= distanceMin)
         sg.filter(lambda a: a.distance <= distanceMax)
+        sg.filter(lambda a: a.tempo_in_txt >= tempoMin)
+        sg.filter(lambda a: a.tempo_in_txt <= tempoMax)
         sg.filter(
             lambda a: a.date
             >= date(

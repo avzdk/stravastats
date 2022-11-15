@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-# Last Modified: 2022/11/10 12:05:34
+# Last Modified: 2022/11/15 09:38:30
 from dataclasses import dataclass
 from strava import Strava
 from datetime import datetime, date, timedelta
