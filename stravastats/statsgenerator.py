@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-# Last Modified: 2022/11/15 09:38:30
+# Last Modified: 2022/11/15 10:27:25
 from dataclasses import dataclass
 from strava import Strava
 from datetime import datetime, date, timedelta
@@ -32,6 +32,7 @@ class Activity:
     distance: float  # meter
     moving_time: float
     average_speed: float
+    elapsed_time: float
     sport_type: str
     # date : datetime = None
 
@@ -88,13 +89,14 @@ class stravaClient(Strava):
         activities: list[Activity] = []  # samtlige aktiviteter.
         for activity in activities_raw:
             dc = Activity(
-                str(activity["id"]),
-                activity["start_date_local"],
-                activity["name"],
-                round(activity["distance"] / 1000, 2),
-                activity["moving_time"],
-                activity["average_speed"],
-                activity["sport_type"],
+                stravaid=str(activity["id"]),
+                start_date_local=activity["start_date_local"],
+                name=activity["name"],
+                distance=round(activity["distance"] / 1000, 2),  # til km
+                moving_time=activity["moving_time"],  # sekunder
+                elapsed_time=activity["elapsed_time"],  # sekumder
+                average_speed=activity["average_speed"],  # m/s (ikek checket)
+                sport_type=activity["sport_type"],
             )
             activities.append(dc)
 
