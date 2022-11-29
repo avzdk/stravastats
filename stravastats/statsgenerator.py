@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-# Last Modified: 2022/11/15 10:27:25
+# Last Modified: 2022/11/29 11:08:17
 from dataclasses import dataclass
 from strava import Strava
 from datetime import datetime, date, timedelta
@@ -153,11 +153,11 @@ class StatsGenerator:
         stats = {}
         while d < self.basicstats()["runs"]["last_run"].date + timedelta(days=7):
             week = str(d.isocalendar().year) + "." + str(d.isocalendar().week).zfill(2)
-            stats[week] = 0
+            stats[week] = {"distance_sum": 0}
             d = d + timedelta(days=7)
 
         for a in self.activities_work:
-            stats[a.week] = stats[a.week] + a.distance
+            stats[a.week]["distance_sum"] = stats[a.week]["distance_sum"] + a.distance
         return stats
 
 
@@ -170,8 +170,8 @@ if __name__ == "__main__":
     statsgenerator.filter(lambda a: a.distance > 1)
     statsgenerator.filter(lambda a: a.date > date(2022, 1, 1))
     statsgenerator.sort(lambda a: -a.distance)
-    print(len(statsgenerator.activities_work))
-    pp(statsgenerator.activities_work)
+    print(f"Antal aktiviteter i work: {len(statsgenerator.activities_work)}")
+    # pp(statsgenerator.activities_work)
 
     print(statsgenerator.basicstats())
     print(statsgenerator.activities_work[0].week)

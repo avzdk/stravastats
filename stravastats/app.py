@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-# Last Modified: 2022/11/15 10:03:22
+# Last Modified: 2022/11/29 11:08:58
 
 
 from datetime import date
@@ -88,7 +88,7 @@ def chart():
     weeklystats = sg.weeklystats()
     for week in weeklystats:
         bar_x.append("w" + week)
-        bar_y.append(weeklystats[week])
+        bar_y.append(weeklystats[week]["distance_sum"])
 
     # scatterplot
     scat_x = []
