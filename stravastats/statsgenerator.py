@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-# Last Modified: 2022/11/29 11:08:17
+# Last Modified: 2022/11/29 14:42:58
 from dataclasses import dataclass
 from strava import Strava
 from datetime import datetime, date, timedelta
@@ -153,11 +153,31 @@ class StatsGenerator:
         stats = {}
         while d < self.basicstats()["runs"]["last_run"].date + timedelta(days=7):
             week = str(d.isocalendar().year) + "." + str(d.isocalendar().week).zfill(2)
-            stats[week] = {"distance_sum": 0}
+            stats[week] = {"distance_sum": 0, "distance_sum_wa": 0}
             d = d + timedelta(days=7)
 
         for a in self.activities_work:
             stats[a.week]["distance_sum"] = stats[a.week]["distance_sum"] + a.distance
+
+        keys = list(stats.keys())
+        for i in range(len(keys)):
+            data0 = stats[keys[i]]
+            if i == 0:
+                dataBefore = stats[keys[i]]  # bruger indeværende uge
+                dataAfter = stats[keys[i + 1]]
+            elif i == len(keys) - 1:
+                dataBefore = stats[keys[i - 1]]
+                stats[keys[i]]  # bruger indeværende uge
+            else:
+                dataBefore = stats[keys[i - 1]]
+                dataAfter = stats[keys[i + 1]]
+            distance_sum_wa = (
+                dataBefore["distance_sum"]
+                + data0["distance_sum"] * 3
+                + dataAfter["distance_sum"]
+            ) / 5
+            data0["distance_sum_wa"] = round(distance_sum_wa, 2)
+
         return stats
 
 
