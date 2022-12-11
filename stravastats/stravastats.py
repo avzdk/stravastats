@@ -10,7 +10,7 @@ from statsgenerator import Activity, StatsGenerator, stravaClient
 import logging
 import configparser
 import os
-
+from datetime import datetime
 
 ENVIRONMENT = os.environ.get("ENV", "local")
 print(f"env:{ENVIRONMENT}")
@@ -61,7 +61,7 @@ def use_filter(args):
 @app.route(URLPREFIX + "/stravastats/")
 def hello():
     print("xxxxxxxxxxxxxxxxxxxxx")
-    return "<h1 style='color:blue'>Hellodffsdf There 666!</h1>"
+    return f"<h1 style='color:blue'>Hellodffsdf There 666!   {datetime.now().strftime('%m/%d/%Y, %H:%M:%S')}</h1>"
 
 
 @app.route(URLPREFIX + "/exchange_token")
@@ -81,7 +81,8 @@ def exchange_token():
 def loaddata():
     global sg
     sg = StatsGenerator(client.runningactivities())
-    return "ok"
+
+    return datetime.now().strftime("%m/%d/%Y, %H:%M:%S")
 
 
 @app.route(URLPREFIX + "/")
