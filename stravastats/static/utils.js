@@ -18,11 +18,11 @@ function filterurl() {
 }
 
 function showlist() {
-    window.location.href = "/filter" + filterurl();
+    window.location.href = "./filter" + filterurl();
 }
 
 function showchart() {
-    window.location.href = "/chart" + filterurl();
+    window.location.href = "./chart" + filterurl();
 }
 
 function filloutForm() {

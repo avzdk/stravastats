@@ -9,7 +9,7 @@
 
 {% block rightblock %}
 <div id="loadspinner" class=" spinner-border text-primary"></div>
-<a id="button" class=" btn btn-primary" href="/filter" role="button">Analyser</a>
+<a id="button" class=" btn btn-primary" href="./filter" role="button">Analyser</a>
 {% endblock %}
 
 {% block scriptblock %}
@@ -17,7 +17,7 @@
 <script>
 
     async function fetchData() {
-        const response = await fetch("/loaddata");
+        const response = await fetch("./loaddata");
         // waits until the request completes...
         console.log(response);
         document.getElementById("loadspinner").classList.add('invisible');

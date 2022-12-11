@@ -7,9 +7,28 @@ from datetime import date
 
 from flask import Flask, render_template, request, stream_with_context
 from statsgenerator import Activity, StatsGenerator, stravaClient
+import logging
+import configparser
+import os
 
-app = Flask(__name__)
+
+ENVIRONMENT = os.environ.get("ENV", "local")
+print(f"env:{ENVIRONMENT}")
+conf = configparser.ConfigParser()
+if ENVIRONMENT == "local":
+    cf = conf.read(os.path.join(os.path.dirname(__file__), "config_local.ini"))
+else:
+    cf = conf.read(os.path.join(os.path.dirname(__file__), "config.ini"))
+
+log = logging.getLogger(__name__)
+log.info("Start")
+
+URLPREFIX = conf["WWWSERVER"]["url_prefix"]
+SERVER = conf["WWWSERVER"]["server"]
+
+app = Flask(__name__, static_url_path=URLPREFIX + "/static")
 app.config["TEMPLATES_AUTO_RELOAD"] = True
+
 client = stravaClient()
 
 
@@ -38,12 +57,14 @@ def use_filter(args):
             <= date(int(endDateArray[0]), int(endDateArray[1]), int(endDateArray[2]))
         )
 
-@app.route("/stravastats/")
+
+@app.route(URLPREFIX + "/stravastats/")
 def hello():
     print("xxxxxxxxxxxxxxxxxxxxx")
     return "<h1 style='color:blue'>Hellodffsdf There 666!</h1>"
 
-@app.route("/exchange_token")
+
+@app.route(URLPREFIX + "/exchange_token")
 def exchange_token():
     authorization_code = request.args.get("code")
     scope = request.args.get("scope")
@@ -56,16 +77,19 @@ def exchange_token():
     return render_template("athlete.html", data=client.getAthlete())
 
 
-@app.route("/loaddata")
+@app.route(URLPREFIX + "/loaddata")
 def loaddata():
     global sg
     sg = StatsGenerator(client.runningactivities())
     return "ok"
 
 
-@app.route("/")
+@app.route(URLPREFIX + "/")
 def home():
-    return render_template("login.html")
+    return render_template(
+        "login.html",
+        redirecturi=SERVER + URLPREFIX + "/exchange_token",
+    )
 
     # if client.access_token == None:
 
@@ -75,14 +99,14 @@ def home():
     #    )
 
 
-@app.route("/filter")
+@app.route(URLPREFIX + "/filter")
 def filter():
 
     use_filter(request.args)
     return render_template("stats.html", data=sg.activities_work, stats=sg.basicstats())
 
 
-@app.route("/chart")
+@app.route(URLPREFIX + "/chart")
 def chart():
     use_filter(request.args)
     global sg
@@ -115,9 +139,14 @@ def chart():
     )
 
 
-@app.route("/login")
+@app.route(URLPREFIX + "/login")
+# SLETTES login flyttet til root
 def login():
-    return render_template("login.html")
+    redirect_uri = "http://localhost:5000/exchange_token"
+    return render_template(
+        "login.html",
+        redirecturi=redirect_uri,
+    )
 
 
 if __name__ == "__main__":
