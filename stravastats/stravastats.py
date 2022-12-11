@@ -38,6 +38,10 @@ def use_filter(args):
             <= date(int(endDateArray[0]), int(endDateArray[1]), int(endDateArray[2]))
         )
 
+@app.route("/stravastats/")
+def hello():
+    print("xxxxxxxxxxxxxxxxxxxxx")
+    return "<h1 style='color:blue'>Hellodffsdf There 666!</h1>"
 
 @app.route("/exchange_token")
 def exchange_token():
@@ -98,7 +102,7 @@ def chart():
         scat_x.append(a.distance)
         scat_y.append(a.tempo)
 
-        scat_text.append(a.date.strftime("%m/%d/%Y") + " id:+")
+        scat_text.append(a.date.strftime("%m/%d/%Y") + " id:" + a.stravaid)
 
     return render_template(
         "chart.html",

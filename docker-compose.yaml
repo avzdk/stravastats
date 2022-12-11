@@ -1,0 +1,21 @@
+version: "3"
+services:
+
+  stravastats:
+    container_name : stravastats
+    environment:
+     - ENV=docker
+     - APP_NAME=Stravastats
+    expose:
+     - 8080
+    build: ./
+    restart: unless-stopped
+    networks:
+      - backend
+      - frontend
+
+networks:
+  frontend:
+    external: true
+  backend:
+    external: true
