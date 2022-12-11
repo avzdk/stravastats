@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-# Last Modified: 2022/11/15 09:38:30
+# Last Modified: 2022/11/29 14:42:58
 from dataclasses import dataclass
 from strava import Strava
 from datetime import datetime, date, timedelta
@@ -32,6 +32,7 @@ class Activity:
     distance: float  # meter
     moving_time: float
     average_speed: float
+    elapsed_time: float
     sport_type: str
     # date : datetime = None
 
@@ -88,13 +89,14 @@ class stravaClient(Strava):
         activities: list[Activity] = []  # samtlige aktiviteter.
         for activity in activities_raw:
             dc = Activity(
-                str(activity["id"]),
-                activity["start_date_local"],
-                activity["name"],
-                round(activity["distance"] / 1000, 2),
-                activity["moving_time"],
-                activity["average_speed"],
-                activity["sport_type"],
+                stravaid=str(activity["id"]),
+                start_date_local=activity["start_date_local"],
+                name=activity["name"],
+                distance=round(activity["distance"] / 1000, 2),  # til km
+                moving_time=activity["moving_time"],  # sekunder
+                elapsed_time=activity["elapsed_time"],  # sekumder
+                average_speed=activity["average_speed"],  # m/s (ikek checket)
+                sport_type=activity["sport_type"],
             )
             activities.append(dc)
 
@@ -151,11 +153,31 @@ class StatsGenerator:
         stats = {}
         while d < self.basicstats()["runs"]["last_run"].date + timedelta(days=7):
             week = str(d.isocalendar().year) + "." + str(d.isocalendar().week).zfill(2)
-            stats[week] = 0
+            stats[week] = {"distance_sum": 0, "distance_sum_wa": 0}
             d = d + timedelta(days=7)
 
         for a in self.activities_work:
-            stats[a.week] = stats[a.week] + a.distance
+            stats[a.week]["distance_sum"] = stats[a.week]["distance_sum"] + a.distance
+
+        keys = list(stats.keys())
+        for i in range(len(keys)):
+            data0 = stats[keys[i]]
+            if i == 0:
+                dataBefore = stats[keys[i]]  # bruger indeværende uge
+                dataAfter = stats[keys[i + 1]]
+            elif i == len(keys) - 1:
+                dataBefore = stats[keys[i - 1]]
+                stats[keys[i]]  # bruger indeværende uge
+            else:
+                dataBefore = stats[keys[i - 1]]
+                dataAfter = stats[keys[i + 1]]
+            distance_sum_wa = (
+                dataBefore["distance_sum"]
+                + data0["distance_sum"] * 3
+                + dataAfter["distance_sum"]
+            ) / 5
+            data0["distance_sum_wa"] = round(distance_sum_wa, 2)
+
         return stats
 
 
@@ -168,8 +190,8 @@ if __name__ == "__main__":
     statsgenerator.filter(lambda a: a.distance > 1)
     statsgenerator.filter(lambda a: a.date > date(2022, 1, 1))
     statsgenerator.sort(lambda a: -a.distance)
-    print(len(statsgenerator.activities_work))
-    pp(statsgenerator.activities_work)
+    print(f"Antal aktiviteter i work: {len(statsgenerator.activities_work)}")
+    # pp(statsgenerator.activities_work)
 
     print(statsgenerator.basicstats())
     print(statsgenerator.activities_work[0].week)
