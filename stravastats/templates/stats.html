@@ -1,18 +1,20 @@
-{% extends "base.html" %}
+{% extends "base2.html" %}
 
 
 {% block leftblock %}
-<h1>Statistik</h1>
-
-{% include 'filters.html' %}
-
-
-
+<h1>Liste</h1>
 
 <p>Samlet {{stats['totals']['total_distance']}} km på {{stats['totals']['number_runs']}}
     ture. {{'%0.2f' | format(stats['totals']['total_distance']/stats['totals']['days']*7| float)}} km/uge
     {{'%0.1f' | format(stats['totals']['number_runs']/stats['totals']['days']*7 | float)}} ture/uge.
 </p>
+
+
+
+{% endblock %}
+
+{% block rightblock %}
+{% include 'filters.html' %}
 
 <div class="card">
     <div class="card-body">
@@ -74,11 +76,6 @@
         Distance: {{stats['runs']['last_run'].distance}} km -> Tempo: {{stats['runs']['last_run'].tempo_in_txt}}
     </div>
 </div>
-
-
-{% endblock %}
-
-{% block rightblock %}
 
 <table class="table table-bordered">
     <tr>
