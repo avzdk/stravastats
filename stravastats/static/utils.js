@@ -17,12 +17,8 @@ function filterurl() {
     return query;
 }
 
-function showlist() {
-    window.location.href = "./filter" + filterurl();
-}
-
-function showchart() {
-    window.location.href = "./chart" + filterurl();
+function changeurl(page) {
+    window.location.href = "./" + page + filterurl();
 }
 
 function filloutForm() {

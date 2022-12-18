@@ -48,20 +48,6 @@
 {% block scriptblock %}
 <script>
 
-    var bar_x = {{ bar_x| safe }};
-    var bar_y = {{ bar_y| safe }};
-
-    var bardata = {
-        x: bar_x,
-        y: bar_y,
-        name: 'Distance',
-        type: 'bar'
-    };
-
-    var data = [bardata];
-    var layout = { barmode: 'stack', yaxis: { title: { text: 'Distance/uge' } } };
-    Plotly.newPlot('barchart_placeholder', data, layout);
-
     var scat_x = {{ scat_x| safe }};
     var scat_y = {{ scat_y| safe }};
     var scat_text = {{ scat_text| safe }};

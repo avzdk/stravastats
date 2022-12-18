@@ -160,6 +160,62 @@ def chart():
     )
 
 
+@app.route(URLPREFIX + "/scatter")
+def scatter():
+    use_filter(request.args)
+    global sg
+    # scatterplot
+    scat_x = []
+    scat_y = []
+    scat_text = []
+    for a in sg.activities_work:
+        scat_x.append(a.distance)
+        scat_y.append(a.tempo)
+
+        scat_text.append(a.date.strftime("%m/%d/%Y") + " id:" + a.stravaid)
+
+    return render_template(
+        "scatter.html",
+        scat_x=scat_x,
+        scat_y=scat_y,
+        scat_text=scat_text,
+        stats=sg.basicstats(),
+    )
+
+
+@app.route(URLPREFIX + "/chartwa")
+def chartwa():
+    use_filter(request.args)
+    global sg
+    # bar hcart by weeks
+    bar_x = []
+    bar_y = []
+    weeklystats = sg.weeklystats()
+    for week in weeklystats:
+        bar_x.append("w" + week)
+        bar_y.append(weeklystats[week]["distance_sum_wa"])
+
+    # scatterplot
+    scat_x = []
+    scat_y = []
+    scat_text = []
+    for a in sg.activities_work:
+        scat_x.append(a.distance)
+        scat_y.append(a.tempo)
+
+        scat_text.append(a.date.strftime("%m/%d/%Y") + " id:" + a.stravaid)
+
+    return render_template(
+        "chart.html",
+        bar_x=bar_x,
+        bar_y=bar_y,
+        scat_x=scat_x,
+        scat_y=scat_y,
+        scat_text=scat_text,
+        stats=sg.basicstats(),
+    )
+
+
 if __name__ == "__main__":
 
     app.run()
