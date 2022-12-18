@@ -39,6 +39,9 @@
     crossorigin="anonymous"></script>
   <script>
     filloutForm();
+    let avzcookie = document.cookie;
+    console.log(avzcookie);
+    console.log(getCookie("username"));
   </script>
   {% block scriptblock %}
   {% endblock %}

@@ -1,6 +1,7 @@
 
 function filterurl() {
     var query = "?";
+    var username = getCookie("username");
     var distanceMin = document.getElementById("distanceFilterMin").value;
     var distanceMax = document.getElementById("distanceFilterMax").value;
     var startDate = document.getElementById("startDate").value;
@@ -8,12 +9,14 @@ function filterurl() {
     var tempoMin = document.getElementById("tempoFilterMin").value;
     var tempoMax = document.getElementById("tempoFilterMax").value;
 
+    if (username != "") { query = query + `username=${username}&` }
     if (distanceMin != "") { query = query + `distanceMin=${distanceMin}&` }
     if (distanceMax != "") { query = query + `distanceMax=${distanceMax}&` }
     if (startDate != "") { query = query + `startDate=${startDate}&` }
     if (endDate != "") { query = query + `endDate=${endDate}&` }
     if (tempoMin != "") { query = query + `tempoMin=${tempoMin}&` }
     if (tempoMax != "") { query = query + `tempoMax=${tempoMax}&` }
+
     return query;
 }
 
@@ -42,4 +45,20 @@ function fillMdr(mdr) {
     d1.setMonth(d1.getMonth() - mdr);
     var str = d1.toISOString().substring(0, 10);
     document.getElementById("startDate").value = str;
+}
+
+function getCookie(cname) {
+    let name = cname + "=";
+    let decodedCookie = decodeURIComponent(document.cookie);
+    let ca = decodedCookie.split(';');
+    for (let i = 0; i < ca.length; i++) {
+        let c = ca[i];
+        while (c.charAt(0) == ' ') {
+            c = c.substring(1);
+        }
+        if (c.indexOf(name) == 0) {
+            return c.substring(name.length, c.length);
+        }
+    }
+    return "";
 }
