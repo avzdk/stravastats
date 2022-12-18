@@ -27,6 +27,7 @@ Henter data fra Strava og viser statistiske nøgletal
         StatsGenerator : filter()
         StatsGenerator : sort()
         StatsGenerator : basicstats()
+        StatsGenerator : weeklystats()
 ```
 
 
