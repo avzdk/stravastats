@@ -155,19 +155,21 @@ class StatsGenerator:
             week = str(d.isocalendar().year) + "." + str(d.isocalendar().week).zfill(2)
             stats[week] = {"distance_sum": 0, "distance_sum_wa": 0}
             d = d + timedelta(days=7)
-
+        # beregner sum af aktivitter pr uge
         for a in self.activities_work:
             stats[a.week]["distance_sum"] = stats[a.week]["distance_sum"] + a.distance
 
-        keys = list(stats.keys())
+        # beregn vægtet løbende gennemsnit.
+
+        keys = list(stats.keys())  # liste af ugenumre på formen 2022.31
         for i in range(len(keys)):
-            data0 = stats[keys[i]]
+            data0 = stats[keys[i]]  # indeværende uge
             if i == 0:
-                dataBefore = stats[keys[i]]  # bruger indeværende uge
+                dataBefore = stats[keys[i]]  # ved første uge brug indeværende uge
                 dataAfter = stats[keys[i + 1]]
             elif i == len(keys) - 1:
                 dataBefore = stats[keys[i - 1]]
-                stats[keys[i]]  # bruger indeværende uge
+                dataAfter = stats[keys[i]]  # ved sidste uge brug indeværende uge
             else:
                 dataBefore = stats[keys[i - 1]]
                 dataAfter = stats[keys[i + 1]]
