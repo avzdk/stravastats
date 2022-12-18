@@ -30,3 +30,16 @@ function filloutForm() {
     document.getElementById("startDate").value = urlParams.get("startDate");
     document.getElementById("endDate").value = urlParams.get("endDate");
 }
+
+
+
+function fillThisYear() {
+    document.getElementById("startDate").value = "2022-01-01";
+}
+
+function fillMdr(mdr) {
+    var d1 = new Date();
+    d1.setMonth(d1.getMonth() - mdr);
+    var str = d1.toISOString().substring(0, 10);
+    document.getElementById("startDate").value = str;
+}

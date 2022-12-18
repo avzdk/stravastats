@@ -4,31 +4,8 @@
 {% block leftblock %}
 <h1>Statistik</h1>
 
-<p>Distance</p>
-<div class="input-group mb-3">
-    <input class="form-control" type="text" id="distanceFilterMin">
-    <span class="input-group-text">-</span>
-    <input class="form-control" type="text" id="distanceFilterMax">
-</div>
-<p>Tempo</p>
-<div class="input-group mb-3">
-    <input class="form-control" type="text" id="tempoFilterMin">
-    <span class="input-group-text">-</span>
-    <input class="form-control" type="text" id="tempoFilterMax">
-</div>
+{% include 'filters.html' %}
 
-{% set startdate = stats['runs']['first_run'].date|string %}
-
-<div class="input-group mb-3">
-    <input id="startDate" class="form-control" type="date" />
-    <span class="input-group-text">-</span>
-    <input id="endDate" class="form-control" type="date" />
-</div>
-
-<button type="button" onclick="changeurl('filter')" class="btn btn-primary">Liste</button>
-<button type="button" onclick="changeurl('chart')" class="btn btn-primary">Ugegraf</button>
-<button type="button" onclick="changeurl('scatter')" class="btn btn-primary">Scatter</button>
-<button type="button" onclick="changeurl('chartwa')" class="btn btn-primary">Vægtet gennemsnit</button>
 
 
 

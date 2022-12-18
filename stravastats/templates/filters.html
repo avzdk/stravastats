@@ -1,0 +1,30 @@
+<p>Distance</p>
+<div class="input-group mb-3">
+    <input class="form-control" type="text" id="distanceFilterMin">
+    <span class="input-group-text">-</span>
+    <input class="form-control" type="text" id="distanceFilterMax">
+</div>
+<p>Tempo</p>
+<div class="input-group mb-3">
+    <input class="form-control" type="text" id="tempoFilterMin">
+    <span class="input-group-text">-</span>
+    <input class="form-control" type="text" id="tempoFilterMax">
+</div>
+
+{% set startdate = stats['runs']['first_run'].date|string %}
+
+<div class="input-group mb-3">
+    <input id="startDate" class="form-control" type="date" />
+    <span class="input-group-text">-</span>
+    <input id="endDate" class="form-control" type="date" />
+    <button type="button" onclick="fillThisYear()" class="btn btn-primary">I år</button>
+    <button type="button" onclick="fillMdr(3)" class="btn btn-primary">3 mdr</button>
+    <button type="button" onclick="fillMdr(6)" class="btn btn-primary">6 mdr</button>
+    <button type="button" onclick="fillMdr(12)" class="btn btn-primary">12 mdr</button>
+</div>
+
+
+<button type="button" onclick="changeurl('filter')" class="btn btn-primary">Liste</button>
+<button type="button" onclick="changeurl('chart')" class="btn btn-primary">Ugegraf</button>
+<button type="button" onclick="changeurl('scatter')" class="btn btn-primary">Scatter</button>
+<button type="button" onclick="changeurl('chartwa')" class="btn btn-primary">Vægtet gennemsnit</button>
