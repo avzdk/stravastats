@@ -23,6 +23,18 @@ else:
 log = logging.getLogger(__name__)
 log.info("Start")
 
+
+logging.basicConfig(
+    level=conf.get("LOG", "LEVEL", fallback="DEBUG"),
+    format="%(levelname)s %(module)s.%(funcName)s %(message)s",
+)
+log.info(
+    f"Starting service loglevel={conf['LOG']['LEVEL']} @ {ENVIRONMENT} environemnt "
+)
+log.info(f"WorkingDirectory: {os.getcwd()}")
+log.info(f"Configurationfiles: {cf}")
+
+
 URLPREFIX = conf["WWWSERVER"]["url_prefix"]
 SERVER = conf["WWWSERVER"]["server"]
 
@@ -58,10 +70,17 @@ def use_filter(args):
         )
 
 
-@app.route(URLPREFIX + "/stravastats/")
+@app.route(URLPREFIX + "/alive/")
 def hello():
-    print("xxxxxxxxxxxxxxxxxxxxx")
-    return f"<h1 style='color:blue'>Hellodffsdf There 666!   {datetime.now().strftime('%m/%d/%Y, %H:%M:%S')}</h1>"
+
+    return f"""
+    time: {datetime.now().strftime('%m/%d/%Y, %H:%M:%S')} </br>
+    server: {SERVER} </br>
+    urlprefix: {URLPREFIX} </br>
+    environement: {ENVIRONMENT} </br>
+    workingdir: {os.getcwd()} </br>
+    conf.files: {cf} </br>
+    </h1>"""
 
 
 @app.route(URLPREFIX + "/exchange_token")
@@ -86,6 +105,7 @@ def loaddata():
 
 
 @app.route(URLPREFIX + "/")
+@app.route("/")
 def home():
     return render_template(
         "login.html",
@@ -137,16 +157,6 @@ def chart():
         scat_y=scat_y,
         scat_text=scat_text,
         stats=sg.basicstats(),
-    )
-
-
-@app.route(URLPREFIX + "/login")
-# SLETTES login flyttet til root
-def login():
-    redirect_uri = "http://localhost:5000/exchange_token"
-    return render_template(
-        "login.html",
-        redirecturi=redirect_uri,
     )
 
 
