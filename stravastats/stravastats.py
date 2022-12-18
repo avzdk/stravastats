@@ -139,23 +139,10 @@ def chart():
         bar_x.append("w" + week)
         bar_y.append(weeklystats[week]["distance_sum"])
 
-    # scatterplot
-    scat_x = []
-    scat_y = []
-    scat_text = []
-    for a in sg.activities_work:
-        scat_x.append(a.distance)
-        scat_y.append(a.tempo)
-
-        scat_text.append(a.date.strftime("%m/%d/%Y") + " id:" + a.stravaid)
-
     return render_template(
         "chart.html",
         bar_x=bar_x,
         bar_y=bar_y,
-        scat_x=scat_x,
-        scat_y=scat_y,
-        scat_text=scat_text,
         stats=sg.basicstats(),
     )
 
@@ -195,23 +182,10 @@ def chartwa():
         bar_x.append("w" + week)
         bar_y.append(weeklystats[week]["distance_sum_wa"])
 
-    # scatterplot
-    scat_x = []
-    scat_y = []
-    scat_text = []
-    for a in sg.activities_work:
-        scat_x.append(a.distance)
-        scat_y.append(a.tempo)
-
-        scat_text.append(a.date.strftime("%m/%d/%Y") + " id:" + a.stravaid)
-
     return render_template(
         "chart.html",
         bar_x=bar_x,
         bar_y=bar_y,
-        scat_x=scat_x,
-        scat_y=scat_y,
-        scat_text=scat_text,
         stats=sg.basicstats(),
     )
 
