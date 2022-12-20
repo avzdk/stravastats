@@ -43,9 +43,10 @@ app.config["TEMPLATES_AUTO_RELOAD"] = True
 
 client = stravaClient()
 
+statsgenerators = {}
 
-def use_filter(args):
-    global sg
+
+def use_filter(args, sg):
     sg.reset()
     if len(args) > 0:
         startDateArray = args.get("startDate", default="2000-01-01").split("-")
@@ -98,8 +99,12 @@ def exchange_token():
 
 @app.route(URLPREFIX + "/loaddata")
 def loaddata():
-    global sg
-    sg = StatsGenerator(client.runningactivities())
+    # kaldes fra login.html
+    # bruger samme client uden kontrol af session. fixes senere.
+    global statsgenerators
+    username = client.getAthlete()["username"]
+    statsgenerators[username] = StatsGenerator(client.runningactivities())
+    # sg = StatsGenerator(client.runningactivities())
 
     return datetime.now().strftime("%m/%d/%Y, %H:%M:%S")
 
@@ -122,15 +127,18 @@ def home():
 
 @app.route(URLPREFIX + "/filter")
 def filter():
-
-    use_filter(request.args)
+    global statsgenerators
+    sg = statsgenerators[request.args["username"]]
+    use_filter(request.args, sg)
     return render_template("stats.html", data=sg.activities_work, stats=sg.basicstats())
 
 
 @app.route(URLPREFIX + "/chart")
 def chart():
-    use_filter(request.args)
-    global sg
+    global statsgenerators
+    sg = statsgenerators[request.args["username"]]
+    use_filter(request.args, sg)
+
     # bar hcart by weeks
     bar_x = []
     bar_y = []
@@ -149,8 +157,10 @@ def chart():
 
 @app.route(URLPREFIX + "/scatter")
 def scatter():
-    use_filter(request.args)
-    global sg
+
+    global statsgenerators
+    sg = statsgenerators[request.args["username"]]
+    use_filter(request.args, sg)
     # scatterplot
     scat_x = []
     scat_y = []
@@ -172,8 +182,10 @@ def scatter():
 
 @app.route(URLPREFIX + "/chartwa")
 def chartwa():
-    use_filter(request.args)
-    global sg
+
+    global statsgenerators
+    sg = statsgenerators[request.args["username"]]
+    use_filter(request.args, sg)
     # bar hcart by weeks
     bar_x = []
     bar_y = []
