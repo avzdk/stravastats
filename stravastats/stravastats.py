@@ -133,28 +133,6 @@ def filter():
     return render_template("stats.html", data=sg.activities_work, stats=sg.basicstats())
 
 
-@app.route(URLPREFIX + "/chart")
-def chart():
-    global statsgenerators
-    sg = statsgenerators[request.args["username"]]
-    use_filter(request.args, sg)
-
-    # bar hcart by weeks
-    bar_x = []
-    bar_y = []
-    weeklystats = sg.weeklystats()
-    for week in weeklystats:
-        bar_x.append("w" + week)
-        bar_y.append(weeklystats[week]["distance_sum"])
-
-    return render_template(
-        "chart.html",
-        bar_x=bar_x,
-        bar_y=bar_y,
-        stats=sg.basicstats(),
-    )
-
-
 @app.route(URLPREFIX + "/scatter")
 def scatter():
 
@@ -180,6 +158,28 @@ def scatter():
     )
 
 
+@app.route(URLPREFIX + "/chartdist")
+def chartdist():
+    global statsgenerators
+    sg = statsgenerators[request.args["username"]]
+    use_filter(request.args, sg)
+
+    # bar hcart by weeks
+    bar_x = []
+    bar_y = []
+    weeklystats = sg.weeklystats()
+    for week in weeklystats:
+        bar_x.append("w" + week)
+        bar_y.append(weeklystats[week]["distance_sum"])
+
+    return render_template(
+        "chart.html",
+        bar_x=bar_x,
+        bar_y=bar_y,
+        stats=sg.basicstats(),
+    )
+
+
 @app.route(URLPREFIX + "/chartwa")
 def chartwa():
 
@@ -193,6 +193,50 @@ def chartwa():
     for week in weeklystats:
         bar_x.append("w" + week)
         bar_y.append(weeklystats[week]["distance_sum_wa"])
+
+    return render_template(
+        "chart.html",
+        bar_x=bar_x,
+        bar_y=bar_y,
+        stats=sg.basicstats(),
+    )
+
+
+@app.route(URLPREFIX + "/chartruns")
+def chartruns():
+
+    global statsgenerators
+    sg = statsgenerators[request.args["username"]]
+    use_filter(request.args, sg)
+    # bar hcart by weeks
+    bar_x = []
+    bar_y = []
+    weeklystats = sg.weeklystats()
+    for week in weeklystats:
+        bar_x.append("w" + week)
+        bar_y.append(weeklystats[week]["numberruns"])
+
+    return render_template(
+        "chart.html",
+        bar_x=bar_x,
+        bar_y=bar_y,
+        stats=sg.basicstats(),
+    )
+
+
+@app.route(URLPREFIX + "/chartmax")
+def chartmax():
+
+    global statsgenerators
+    sg = statsgenerators[request.args["username"]]
+    use_filter(request.args, sg)
+    # bar hcart by weeks
+    bar_x = []
+    bar_y = []
+    weeklystats = sg.weeklystats()
+    for week in weeklystats:
+        bar_x.append("w" + week)
+        bar_y.append(weeklystats[week]["distance_max"])
 
     return render_template(
         "chart.html",

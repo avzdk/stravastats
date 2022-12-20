@@ -153,11 +153,20 @@ class StatsGenerator:
         stats = {}
         while d < self.basicstats()["runs"]["last_run"].date + timedelta(days=7):
             week = str(d.isocalendar().year) + "." + str(d.isocalendar().week).zfill(2)
-            stats[week] = {"distance_sum": 0, "distance_sum_wa": 0}
+            stats[week] = {
+                "distance_sum": 0,
+                "distance_sum_wa": 0,
+                "distance_max": 0,
+                "numberruns": 0,
+            }
             d = d + timedelta(days=7)
-        # beregner sum af aktivitter pr uge
+        # beregner sum, antal og max af aktivitter pr uge
         for a in self.activities_work:
             stats[a.week]["distance_sum"] = stats[a.week]["distance_sum"] + a.distance
+            stats[a.week]["numberruns"] = stats[a.week]["numberruns"] + 1
+            stats[a.week]["distance_max"] = max(
+                stats[a.week]["distance_max"], a.distance
+            )
 
         # beregn vægtet løbende gennemsnit.
 
