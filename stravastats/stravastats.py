@@ -158,6 +158,32 @@ def scatter():
     )
 
 
+@app.route(URLPREFIX + "/scatter2")
+def scatter2():
+
+    global statsgenerators
+    sg = statsgenerators[request.args["username"]]
+    use_filter(request.args, sg)
+    # scatterplot
+    scat_x = []
+    scat_y = []
+    scat_text = []
+    weeklystats = sg.weeklystats()
+    for week in weeklystats:
+        scat_x.append(weeklystats[week]["distance_sum"])
+        scat_y.append(weeklystats[week]["distance_max"])
+
+        scat_text.append(week)
+
+    return render_template(
+        "scatter2.html",
+        scat_x=scat_x,
+        scat_y=scat_y,
+        scat_text=scat_text,
+        stats=sg.basicstats(),
+    )
+
+
 @app.route(URLPREFIX + "/chartdist")
 def chartdist():
     global statsgenerators

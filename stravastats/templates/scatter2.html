@@ -1,0 +1,70 @@
+{% extends "base2.html" %}
+
+{% block scriptblockTop %}
+<script src='https://cdn.plot.ly/plotly-2.16.1.min.js'></script>
+{% endblock %}
+
+{% block leftblock %}
+<h1>Scatter</h1>
+<p>Samlet {{stats['totals']['total_distance']}} km på {{stats['totals']['number_runs']}}
+    ture. {{'%0.2f' | format(stats['totals']['total_distance']/stats['totals']['days']*7| float)}} km/uge
+    {{'%0.1f' | format(stats['totals']['number_runs']/stats['totals']['days']*7 | float)}} ture/uge.
+</p>
+
+
+{% endblock %}
+
+{% block rightblock %}
+{% include 'filters.html' %}
+
+<div id='barchart_placeholder'></div>
+<div id='scatchart_placeholder'></div>
+
+{% endblock %}
+
+{% block scriptblock %}
+<script>
+
+    var scat_x = {{ scat_x| safe }};
+    var scat_y = {{ scat_y| safe }};
+    var scat_text = {{ scat_text| safe }};
+
+    console.log(scat_x);
+    var lineTop = {
+        x: [],
+        y: [],
+        name: 'Target 10%',
+        type: 'scatter',
+    }
+
+    week = 0
+    x = scat_x[0]
+    y = scat_y[0]
+    lineTop.x.push(x);
+    lineTop.y.push(y);
+
+    while (week < scat_x.length) {
+        x0 = x;
+        x = x0 * 1.1;
+        y = x * 0.45;
+        lineTop.x.push(x);
+        lineTop.y.push(y);
+        week = week + 1;
+    }
+
+    var scatdata = {
+        x: scat_x,
+        y: scat_y,
+        text: scat_text,
+        marker: { size: 3 },
+        name: 'Faktisk',
+        type: 'scatter',
+    };
+
+    var data = [scatdata, lineTop];
+    var layout = { height: 1000, xaxis: { title: { text: 'Samlet distance' } }, yaxis: { title: { text: 'Længste' } } };
+    Plotly.newPlot('scatchart_placeholder', data, layout);
+
+</script>
+
+{% endblock %}

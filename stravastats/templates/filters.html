@@ -14,6 +14,7 @@
 {% set startdate = stats['runs']['first_run'].date|string %}
 <div>
     <button type="button" onclick="fillThisYear()" class="btn btn-secondary btn-sm">I år</button>
+    <button type="button" onclick="fillMdr(1)" class="btn btn-secondary btn-sm">1 mdr</button>
     <button type="button" onclick="fillMdr(3)" class="btn btn-secondary btn-sm">3 mdr</button>
     <button type="button" onclick="fillMdr(6)" class="btn btn-secondary btn-sm">6 mdr</button>
     <button type="button" onclick="fillMdr(12)" class="btn btn-secondary btn-sm">12 mdr</button>
@@ -31,3 +32,4 @@
 <button type="button" onclick="changeurl('chartruns')" class="btn btn-primary">Ugegraf antal</button>
 <button type="button" onclick="changeurl('chartwa')" class="btn btn-primary">Ugegraf (vg)</button>
 <button type="button" onclick="changeurl('scatter')" class="btn btn-primary">Scatter</button>
+<button type="button" onclick="changeurl('scatter2')" class="btn btn-primary">Scatter2</button>
