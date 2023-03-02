@@ -102,8 +102,8 @@ def loaddata():
     # kaldes fra login.html
     # bruger samme client uden kontrol af session. fixes senere.
     global statsgenerators
-    username = client.getAthlete()["username"]
-    statsgenerators[username] = StatsGenerator(client.runningactivities())
+    id = str(client.getAthlete()["id"])
+    statsgenerators[id] = StatsGenerator(client.runningactivities())
     # sg = StatsGenerator(client.runningactivities())
 
     return datetime.now().strftime("%m/%d/%Y, %H:%M:%S")
@@ -128,7 +128,7 @@ def home():
 @app.route(URLPREFIX + "/filter")
 def filter():
     global statsgenerators
-    sg = statsgenerators[request.args["username"]]
+    sg = statsgenerators[request.args["id"]]
     use_filter(request.args, sg)
     return render_template("stats.html", data=sg.activities_work, stats=sg.basicstats())
 
@@ -137,7 +137,7 @@ def filter():
 def scatter():
 
     global statsgenerators
-    sg = statsgenerators[request.args["username"]]
+    sg = statsgenerators[request.args["id"]]
     use_filter(request.args, sg)
     # scatterplot
     scat_x = []
@@ -162,7 +162,7 @@ def scatter():
 def scatter2():
 
     global statsgenerators
-    sg = statsgenerators[request.args["username"]]
+    sg = statsgenerators[request.args["id"]]
     use_filter(request.args, sg)
     # scatterplot
     scat_x = []
@@ -187,7 +187,7 @@ def scatter2():
 @app.route(URLPREFIX + "/chartdist")
 def chartdist():
     global statsgenerators
-    sg = statsgenerators[request.args["username"]]
+    sg = statsgenerators[request.args["id"]]
     use_filter(request.args, sg)
 
     # bar hcart by weeks
@@ -219,7 +219,7 @@ def chartdist():
 def chartwa():
 
     global statsgenerators
-    sg = statsgenerators[request.args["username"]]
+    sg = statsgenerators[request.args["id"]]
     use_filter(request.args, sg)
     # bar hcart by weeks
     bar_x = []
@@ -241,7 +241,7 @@ def chartwa():
 def chartruns():
 
     global statsgenerators
-    sg = statsgenerators[request.args["username"]]
+    sg = statsgenerators[request.args["id"]]
     use_filter(request.args, sg)
     # bar hcart by weeks
     bar_x = []
@@ -263,7 +263,7 @@ def chartruns():
 def chartmax():
 
     global statsgenerators
-    sg = statsgenerators[request.args["username"]]
+    sg = statsgenerators[request.args["id"]]
     use_filter(request.args, sg)
     # bar hcart by weeks
     bar_x = []

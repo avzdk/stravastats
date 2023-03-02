@@ -4,7 +4,7 @@
 {% block leftblock %}
 <h1>Statistik</h1>
 <p>{{data.firstname}}</p>
-<p>{{data.username}}</p>
+<p>{{data.id}}</p>
 <p><img class="img-thumbnail" src="{{data.profile_medium}}"></p>
 {% endblock %}
 
@@ -12,15 +12,15 @@
 <p>Henter data fra Strava det kan tage 30 sek. afhængig af antal løbeture.</p>
 <div id="loadspinner" class=" spinner-border text-primary"></div>
 
-<a id="button" class=" btn btn-primary" href="./filter?username={{data.username}}" role="button">Analyser</a>
+<a id="button" class=" btn btn-primary" href="./filter?id={{data.id}}" role="button">Analyser</a>
 {% endblock %}
 
 {% block scriptblock %}
 
 <script>
-    document.cookie = "username={{data.username}}";
+    document.cookie = "id={{data.id}}";
     async function fetchData() {
-        const response = await fetch("./loaddata?username={{data.username}}");
+        const response = await fetch("./loaddata?id={{data.id}}");
         // waits until the request completes...
         console.log(response);
         document.getElementById("loadspinner").classList.add('invisible');

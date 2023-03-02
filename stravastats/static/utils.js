@@ -1,7 +1,7 @@
 
 function filterurl() {
     var query = "?";
-    var username = getCookie("username");
+    var id = getCookie("id");
     var distanceMin = document.getElementById("distanceFilterMin").value;
     var distanceMax = document.getElementById("distanceFilterMax").value;
     var startDate = document.getElementById("startDate").value;
@@ -9,7 +9,7 @@ function filterurl() {
     var tempoMin = document.getElementById("tempoFilterMin").value;
     var tempoMax = document.getElementById("tempoFilterMax").value;
 
-    if (username != "") { query = query + `username=${username}&` }
+    if (id != "") { query = query + `id=${id}&` }
     if (distanceMin != "") { query = query + `distanceMin=${distanceMin}&` }
     if (distanceMax != "") { query = query + `distanceMax=${distanceMax}&` }
     if (startDate != "") { query = query + `startDate=${startDate}&` }
