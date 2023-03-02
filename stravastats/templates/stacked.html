@@ -29,6 +29,13 @@
     var bar_y = {{ bar_y| safe }};
     var bar_y2 = {{ bar_y2| safe }};
     var bar_y2txt = {{ bar_y2txt| safe }};
+    var regLine = []
+    y = {{ lr_intercept }}
+    slope = {{ lr_slope }}
+    for (x of bar_x) {
+        regLine.push(y)
+        y = y + slope
+    }
 
     var bardata = {
         x: bar_x,
@@ -48,7 +55,15 @@
         hoverinfo: 'none'
     };
 
-    var data = [bardata, bardata2];
+    var scatterdata = {
+        x: bar_x,
+        y: regLine,
+        name: 'Tendens',
+        type: 'scatter',
+        marker: { size: 1 }
+    };
+
+    var data = [bardata, bardata2, scatterdata];
     var layout = { barmode: 'stack', yaxis: { title: { text: 'Distance/uge' } } };
     Plotly.newPlot('barchart_placeholder', data, layout);
 
