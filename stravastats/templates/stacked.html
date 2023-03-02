@@ -1,0 +1,57 @@
+{% extends "base2.html" %}
+
+{% block scriptblockTop %}
+<script src='https://cdn.plot.ly/plotly-2.16.1.min.js'></script>
+{% endblock %}
+
+{% block leftblock %}
+<h1>Ugegraf</h1>
+<p>Samlet {{stats['totals']['total_distance']}} km på {{stats['totals']['number_runs']}}
+    ture. {{'%0.2f' | format(stats['totals']['total_distance']/stats['totals']['days']*7| float)}} km/uge
+    {{'%0.1f' | format(stats['totals']['number_runs']/stats['totals']['days']*7 | float)}} ture/uge.
+</p>
+
+
+{% endblock %}
+
+{% block rightblock %}
+{% include 'filters.html' %}
+
+<div id='barchart_placeholder'></div>
+<div id='scatchart_placeholder'></div>
+
+{% endblock %}
+
+{% block scriptblock %}
+<script>
+
+    var bar_x = {{ bar_x| safe }};
+    var bar_y = {{ bar_y| safe }};
+    var bar_y2 = {{ bar_y2| safe }};
+    var bar_y2txt = {{ bar_y2txt| safe }};
+
+    var bardata = {
+        x: bar_x,
+        y: bar_y,
+        name: 'Længste',
+        type: 'bar',
+        text: bar_y,
+        hoverinfo: 'none'
+    };
+
+    var bardata2 = {
+        x: bar_x,
+        y: bar_y2,
+        name: 'Total',
+        type: 'bar',
+        text: bar_y2txt,
+        hoverinfo: 'none'
+    };
+
+    var data = [bardata, bardata2];
+    var layout = { barmode: 'stack', yaxis: { title: { text: 'Distance/uge' } } };
+    Plotly.newPlot('barchart_placeholder', data, layout);
+
+</script>
+
+{% endblock %}

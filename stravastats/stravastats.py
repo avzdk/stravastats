@@ -193,15 +193,24 @@ def chartdist():
     # bar hcart by weeks
     bar_x = []
     bar_y = []
+    bar_y2 = []
+    bar_y2txt = []
     weeklystats = sg.weeklystats()
     for week in weeklystats:
         bar_x.append("w" + week)
-        bar_y.append(weeklystats[week]["distance_sum"])
+        bar_y.append(round(weeklystats[week]["distance_max"], 1))
+        diff = round(
+            weeklystats[week]["distance_sum"] - weeklystats[week]["distance_max"], 1
+        )  # topup på stacked diagram
+        bar_y2.append(diff)
+        bar_y2txt.append(round(weeklystats[week]["distance_sum"], 1))
 
     return render_template(
-        "chart.html",
+        "stacked.html",
         bar_x=bar_x,
         bar_y=bar_y,
+        bar_y2=bar_y2,
+        bar_y2txt=bar_y2txt,
         stats=sg.basicstats(),
     )
 
