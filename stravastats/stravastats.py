@@ -237,7 +237,7 @@ def chartwa():
         bar_x=bar_x,
         bar_y=bar_y,
         stats=sg.basicstats(),
-        txt="Viser ugens samlede distance som glidende gennemsnt. (D<sub>-1</sub>+3*D<sub>0</sub>+D<sub>+1</sub>)/5</p>",
+        txt="Viser ugens samlede distance som glidende gennemsnt.</p><p> (D<sub>-1</sub>+3*D<sub>0</sub>+D<sub>+1</sub>)/5</p>",
     )
 
 
