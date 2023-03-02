@@ -149,17 +149,25 @@ class StatsGenerator:
 
     def weeklystats(self):
         # dan listen af uger så der er plads til uger uden løb
-        d = self.basicstats()["runs"]["first_run"].date
+
+        date_firstrun = self.basicstats()["runs"]["first_run"].date
+        monday = date_firstrun - timedelta(days=date_firstrun.weekday())
+        date_lastrun = self.basicstats()["runs"]["last_run"].date
         stats = {}
-        while d < self.basicstats()["runs"]["last_run"].date + timedelta(days=7):
-            week = str(d.isocalendar().year) + "." + str(d.isocalendar().week).zfill(2)
+        while monday <= date_lastrun:
+            week = (
+                str(monday.isocalendar().year)
+                + "."
+                + str(monday.isocalendar().week).zfill(2)
+            )
             stats[week] = {
                 "distance_sum": 0,
                 "distance_sum_wa": 0,
                 "distance_max": 0,
                 "numberruns": 0,
             }
-            d = d + timedelta(days=7)
+            monday = monday + timedelta(days=7)
+
         # beregner sum, antal og max af aktivitter pr uge
         for a in self.activities_work:
             stats[a.week]["distance_sum"] = stats[a.week]["distance_sum"] + a.distance
@@ -198,9 +206,9 @@ if __name__ == "__main__":
     client.getToken()
     statsgenerator = StatsGenerator(client.runningactivities())
     print(len(statsgenerator.activities_work))
-    statsgenerator.filter(lambda a: a.distance > 1)
-    statsgenerator.filter(lambda a: a.date > date(2022, 1, 1))
-    statsgenerator.sort(lambda a: -a.distance)
+    # statsgenerator.filter(lambda a: a.distance > 1)
+    statsgenerator.filter(lambda a: a.date >= date(2023, 2, 20))
+    # statsgenerator.sort(lambda a: -a.distance)
     print(f"Antal aktiviteter i work: {len(statsgenerator.activities_work)}")
     # pp(statsgenerator.activities_work)
 
