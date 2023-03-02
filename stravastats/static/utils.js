@@ -37,7 +37,10 @@ function filloutForm() {
 
 
 function fillThisYear() {
-    document.getElementById("startDate").value = "2022-01-01";
+    const currentDate = new Date();
+    const year = currentDate.getFullYear();
+    document.getElementById("startDate").value = String(year) + "-01-01";
+
 }
 
 function fillMdr(mdr) {
