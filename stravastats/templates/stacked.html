@@ -18,8 +18,8 @@
 {% include 'filters.html' %}
 
 <div id='barchart_placeholder'></div>
-<div id='scatchart_placeholder'></div>
 
+<p>Du øger din distance med {{lr_slope}} km. pr uge. svarende til {{(100*lr_slope / lr_intercept) |round(1) }} %</p>
 {% endblock %}
 
 {% block scriptblock %}
@@ -53,5 +53,7 @@
     Plotly.newPlot('barchart_placeholder', data, layout);
 
 </script>
+
+
 
 {% endblock %}

@@ -154,6 +154,7 @@ class StatsGenerator:
         monday = date_firstrun - timedelta(days=date_firstrun.weekday())
         date_lastrun = self.basicstats()["runs"]["last_run"].date
         stats = {}
+        weekcount = 0
         while monday <= date_lastrun:
             week = (
                 str(monday.isocalendar().year)
@@ -165,8 +166,11 @@ class StatsGenerator:
                 "distance_sum_wa": 0,
                 "distance_max": 0,
                 "numberruns": 0,
+                "monday": monday,
+                "weekcount": weekcount,
             }
             monday = monday + timedelta(days=7)
+            weekcount = weekcount + 1
 
         # beregner sum, antal og max af aktivitter pr uge
         for a in self.activities_work:
@@ -199,6 +203,30 @@ class StatsGenerator:
 
         return stats
 
+    def linear_regression(self):
+        weekdata = self.weeklystats()
+        x = []
+        y = []
+        for w in weekdata:
+            x.append(weekdata[w]["weekcount"])
+            y.append(weekdata[w]["distance_sum"])
+
+        n = len(x)
+        sum_x = sum(x)
+        sum_y = sum(y)
+        sum_xy = sum([xi * yi for xi, yi in zip(x, y)])
+        sum_xx = sum([xi**2 for xi in x])
+
+        slope = (n * sum_xy - sum_x * sum_y) / (n * sum_xx - sum_x**2)
+        intercept = (sum_y - slope * sum_x) / n
+
+        # residuals = [yi - (slope * xi + intercept) for xi, yi in zip(x, y)]
+        # ss_res = sum([residual**2 for residual in residuals])
+        # ss_tot = sum([(yi - sum_y / n) ** 2 for yi in y])
+        # r_squared = 1 - (ss_res / ss_tot)
+
+        return slope, intercept
+
 
 if __name__ == "__main__":
     client = stravaClient()
@@ -207,7 +235,7 @@ if __name__ == "__main__":
     statsgenerator = StatsGenerator(client.runningactivities())
     print(len(statsgenerator.activities_work))
     # statsgenerator.filter(lambda a: a.distance > 1)
-    statsgenerator.filter(lambda a: a.date >= date(2023, 2, 20))
+    statsgenerator.filter(lambda a: a.date >= date(2023, 1, 1))
     # statsgenerator.sort(lambda a: -a.distance)
     print(f"Antal aktiviteter i work: {len(statsgenerator.activities_work)}")
     # pp(statsgenerator.activities_work)
@@ -215,3 +243,4 @@ if __name__ == "__main__":
     print(statsgenerator.basicstats())
     print(statsgenerator.activities_work[0].week)
     print(statsgenerator.weeklystats())
+    print(statsgenerator.linear_regression())

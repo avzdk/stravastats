@@ -207,6 +207,8 @@ def chartdist():
         bar_y2.append(diff)
         bar_y2txt.append(round(weeklystats[week]["distance_sum"], 1))
 
+    lr_slope, lr_intercept = sg.linear_regression()
+
     return render_template(
         "stacked.html",
         bar_x=bar_x,
@@ -214,6 +216,8 @@ def chartdist():
         bar_y2=bar_y2,
         bar_y2txt=bar_y2txt,
         stats=sg.basicstats(),
+        lr_slope=round(lr_slope, 1),
+        lr_intercept=round(lr_intercept, 1),
         txt="<p>Viser ugens længste distance samt den samlede distance i løbet af ugen.</p>",
     )
 
