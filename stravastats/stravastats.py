@@ -155,6 +155,7 @@ def scatter():
         scat_y=scat_y,
         scat_text=scat_text,
         stats=sg.basicstats(),
+        txt="<p>Hver prik er en løbetur. Placeret i forhold til distance og hastighed.</p>",
     )
 
 
@@ -181,6 +182,7 @@ def scatter2():
         scat_y=scat_y,
         scat_text=scat_text,
         stats=sg.basicstats(),
+        txt="<p>Viser en foreslået progression samt den faktiske progression.</p>",
     )
 
 
@@ -212,6 +214,7 @@ def chartdist():
         bar_y2=bar_y2,
         bar_y2txt=bar_y2txt,
         stats=sg.basicstats(),
+        txt="<p>Viser ugens længste distance samt den samlede distance i løbet af ugen.</p>",
     )
 
 
@@ -234,6 +237,7 @@ def chartwa():
         bar_x=bar_x,
         bar_y=bar_y,
         stats=sg.basicstats(),
+        txt="Viser ugens samlede distance som glidende gennemsnt. (D<sub>-1</sub>+3*D<sub>0</sub>+D<sub>+1</sub>)/5</p>",
     )
 
 
@@ -256,28 +260,7 @@ def chartruns():
         bar_x=bar_x,
         bar_y=bar_y,
         stats=sg.basicstats(),
-    )
-
-
-@app.route(URLPREFIX + "/chartmax")
-def chartmax():
-
-    global statsgenerators
-    sg = statsgenerators[request.args["id"]]
-    use_filter(request.args, sg)
-    # bar hcart by weeks
-    bar_x = []
-    bar_y = []
-    weeklystats = sg.weeklystats()
-    for week in weeklystats:
-        bar_x.append("w" + week)
-        bar_y.append(weeklystats[week]["distance_max"])
-
-    return render_template(
-        "chart.html",
-        bar_x=bar_x,
-        bar_y=bar_y,
-        stats=sg.basicstats(),
+        txt="Viser antal løbeture pr. uge.",
     )
 
 
