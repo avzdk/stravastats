@@ -35,19 +35,24 @@ function filloutForm() {
 }
 
 
-
+function nextMondayISO(date) {
+    date.setDate(date.getDate() + (1 + 7 - date.getDay()) % 7);
+    datetxt = date.getFullYear() + "-" + String(date.getMonth() + 1).padStart(2, '0') + "-" + String(date.getDate()).padStart(2, '0');
+    return datetxt;
+}
 function fillThisYear() {
-    const currentDate = new Date();
-    const year = currentDate.getFullYear();
-    document.getElementById("startDate").value = String(year) + "-01-01";
+    var firstmonday = new Date(new Date().getFullYear(), 0, 1);   // 1. januar
+    datetxt = nextMondayISO(firstmonday);
+
+    document.getElementById("startDate").value = datetxt;
 
 }
 
 function fillMdr(mdr) {
     var d1 = new Date();
     d1.setMonth(d1.getMonth() - mdr);
-    var str = d1.toISOString().substring(0, 10);
-    document.getElementById("startDate").value = str;
+    datetxt = nextMondayISO(d1);
+    document.getElementById("startDate").value = datetxt;
 }
 
 function getCookie(cname) {
