@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-# Last Modified: 2023/03/09 12:06:13
+# Last Modified: 2023/03/09 12:25:49
 
 
 from datetime import date
@@ -219,6 +219,7 @@ def chartdist():
         lr_slope=round(lr_slope, 1),
         lr_intercept=round(lr_intercept, 1),
         txt="<p>Viser ugens længste distance samt den samlede distance i løbet af ugen.</p>",
+        ylabel="Distance pr. uge",
     )
 
 
@@ -234,14 +235,15 @@ def chartwa():
     weeklystats = sg.weeklystats()
     for week in weeklystats:
         bar_x.append("w" + week)
-        bar_y.append(weeklystats[week]["distance_sum_wa"])
+        bar_y.append(round(weeklystats[week]["distance_sum_wa"], 1))
 
     return render_template(
         "chart.html",
         bar_x=bar_x,
         bar_y=bar_y,
         stats=sg.basicstats(),
-        txt="Viser ugens samlede distance som glidende gennemsnt.</p><p> (D<sub>-1</sub>+3*D<sub>0</sub>+D<sub>+1</sub>)/5</p>",
+        txt="<p>Viser ugens samlede distance som glidende gennemsnit.</p><p> (D<sub>-1</sub>+3*D<sub>0</sub>+D<sub>+1</sub>)/5</p>",
+        ylabel="Distance pr. uge",
     )
 
 
@@ -265,6 +267,7 @@ def chartinc():
         bar_y=bar_y,
         stats=sg.basicstats(),
         txt="Viser procentvis forøgelse af distance i forhold til ugen før.</p>",
+        ylabel="% pr. uge",
     )
 
 
@@ -288,6 +291,7 @@ def chartruns():
         bar_y=bar_y,
         stats=sg.basicstats(),
         txt="Viser antal løbeture pr. uge.",
+        ylabel="Antal ture",
     )
 
 
