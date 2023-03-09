@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-# Last Modified: 2022/11/29 11:08:58
+# Last Modified: 2023/03/09 12:06:13
 
 
 from datetime import date
@@ -242,6 +242,29 @@ def chartwa():
         bar_y=bar_y,
         stats=sg.basicstats(),
         txt="Viser ugens samlede distance som glidende gennemsnt.</p><p> (D<sub>-1</sub>+3*D<sub>0</sub>+D<sub>+1</sub>)/5</p>",
+    )
+
+
+@app.route(URLPREFIX + "/chartinc")
+def chartinc():
+
+    global statsgenerators
+    sg = statsgenerators[request.args["id"]]
+    use_filter(request.args, sg)
+    # bar hcart by weeks
+    bar_x = []
+    bar_y = []
+    weeklystats = sg.weeklystats()
+    for week in weeklystats:
+        bar_x.append("w" + week)
+        bar_y.append(round(weeklystats[week]["distance_sum_incpct"] * 100, 0))
+
+    return render_template(
+        "chart.html",
+        bar_x=bar_x,
+        bar_y=bar_y,
+        stats=sg.basicstats(),
+        txt="Viser procentvis forøgelse af distance i forhold til ugen før.</p>",
     )
 
 
