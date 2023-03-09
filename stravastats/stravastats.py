@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-# Last Modified: 2023/03/09 12:25:49
+# Last Modified: 2023/03/09 13:31:34
 
 
 from datetime import date
@@ -266,7 +266,7 @@ def chartinc():
         bar_x=bar_x,
         bar_y=bar_y,
         stats=sg.basicstats(),
-        txt="Viser procentvis forøgelse af distance i forhold til ugen før.</p>",
+        txt="Viser procentvis forøgelse af distance i forhold til ugen før.</p><p>Bemærk at hvis du springer en uge over så vises 0%</p>",
         ylabel="% pr. uge",
     )
 

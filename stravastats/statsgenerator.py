@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-# Last Modified: 2023/03/09 11:44:53
+# Last Modified: 2023/03/09 13:30:51
 from dataclasses import dataclass
 from strava import Strava
 from datetime import datetime, date, timedelta
@@ -200,9 +200,12 @@ class StatsGenerator:
                 + dataAfter["distance_sum"]
             ) / 5
             data0["distance_sum_wa"] = round(distance_sum_wa, 2)
-            data0["distance_sum_incpct"] = (
-                data0["distance_sum"] - dataBefore["distance_sum"]
-            ) / dataBefore["distance_sum"]
+            if dataBefore["distance_sum"] != 0:  # kan ikke dividere med 0
+                data0["distance_sum_incpct"] = (
+                    data0["distance_sum"] - dataBefore["distance_sum"]
+                ) / dataBefore["distance_sum"]
+            else:
+                data0["distance_sum_incpct"] = 0
 
         return stats
 
