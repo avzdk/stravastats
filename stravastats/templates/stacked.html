@@ -64,7 +64,7 @@
     };
 
     var data = [bardata, bardata2, scatterdata];
-    var layout = { barmode: 'stack', yaxis: { title: { text: "{{ ylabel| safe }}" } } };
+    var layout = { barmode: 'stack', yaxis: { title: { text: "{{ ylabel| safe }}" } }, legend: { x: 1, y: 1, xanchor: 'right', orientation: "h" } };
     Plotly.newPlot('barchart_placeholder', data, layout);
 
 </script>
