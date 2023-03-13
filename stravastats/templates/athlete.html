@@ -2,17 +2,15 @@
 
 
 {% block leftblock %}
-<h1>Statistik</h1>
-<p>{{data.firstname}}</p>
-<p>{{data.id}}</p>
-<p><img class="img-thumbnail" src="{{data.profile_medium}}"></p>
-{% endblock %}
-
-{% block rightblock %}
 <p>Henter data fra Strava det kan tage 30 sek. afhængig af antal løbeture.</p>
 <div id="loadspinner" class=" spinner-border text-primary"></div>
 
 <a id="button" class=" btn btn-primary" href="./filter?id={{data.id}}" role="button">Analyser</a>
+{% endblock %}
+
+{% block rightblock %}
+<p>{{data.firstname}}</p>
+<p><img class="img-thumbnail" src="{{data.profile_medium}}"></p>
 {% endblock %}
 
 {% block scriptblock %}
