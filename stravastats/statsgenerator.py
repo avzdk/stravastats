@@ -65,11 +65,14 @@ class Activity:
 
 
 class stravaClient(Strava):
-    def runningactivities(self, after_date: date = date(1974, 1, 1)):
+    def runningactivities(
+        self, after_date: date = date(1974, 1, 1), types=["Run", "TrailRun"]
+    ):
         # henter alle aktiviteter ved at kalde API flere gange indtil der ikke er flere.
-        # filtrerer desuden så det kun er løb.
+        # filtrerer desuden så det kun er løb.  ["Run", "TrailRun"]
         # self.getToken()
         activities_raw = []
+
         for page in range(1, 500):
             rv = self.getActivities(
                 200, page, datetime.combine(after_date, datetime.min.time())
@@ -79,8 +82,10 @@ class stravaClient(Strava):
             else:
                 break
         log.info(f"ANTAL {len(activities_raw)} hentet")
+        for a in activities_raw:
+            print(a["sport_type"])
         activities_raw = list(
-            filter(lambda a: a["sport_type"] == "Run", activities_raw)
+            filter(lambda a: a["sport_type"] in types, activities_raw)
         )
         log.info(f"heraf {len(activities_raw)} løb")
         activities_raw = list(filter(lambda a: a["distance"] > 1, activities_raw))
